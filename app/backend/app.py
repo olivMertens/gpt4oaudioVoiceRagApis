@@ -108,6 +108,7 @@ async def get_flights(flight: Optional[str] = None):
         flights = [f for f in flights if f["id"] == flight]
     return {"flights": flights}
 
+
 @app.put("/api/bookings/{booking_id}/options")
 async def update_booking_options(booking_id: int, request: BookingUpdateRequest):
     bookings = get_bookings_data()

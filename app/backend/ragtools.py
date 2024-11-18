@@ -1,4 +1,4 @@
-import re
+import re, httpx
 from typing import Any
 
 from azure.core.credentials import AzureKeyCredential
@@ -150,11 +150,10 @@ async def _booking_tool(args: Any) -> ToolResult:
     return ToolResult({"bookings": bookings}, ToolResultDirection.TO_CLIENT)
 
 async def _flight_tool(args: Any) -> ToolResult:
-    from data.load_data import get_flights_data
-    flights = get_flights_data()
-    flight = args.get("flight")
-    if flight:
-        flights = [f for f in flights if f["id"] == flight]
+    async with httpx.AsyncClient() as client:
+        response = await client.get("http://localhost:8765/api/flights", params=args)
+        response.raise_for_status()
+        flights = response.json()
     return ToolResult({"flights": flights}, ToolResultDirection.TO_CLIENT)
 
 def attach_rag_tools(rtmt: RTMiddleTier,
