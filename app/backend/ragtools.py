@@ -49,6 +49,44 @@ _grounding_tool_schema = {
     }
 }
 
+_booking_tool_schema = {
+    "type": "function",
+    "name": "get_bookings",
+    "description": "Retrieve booking information for Air France and KLM flights.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "flight": {
+                "type": "string",
+                "description": "Flight ID"
+            },
+            "name": {
+                "type": "string",
+                "description": "Name of the person"
+            }
+        },
+        "required": [],
+        "additionalProperties": False
+    }
+}
+
+_flight_tool_schema = {
+    "type": "function",
+    "name": "get_flights",
+    "description": "Retrieve flight information for Air France and KLM flights.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "flight": {
+                "type": "string",
+                "description": "Flight ID"
+            }
+        },
+        "required": [],
+        "additionalProperties": False
+    }
+}
+
 async def _search_tool(
     search_client: SearchClient, 
     semantic_configuration: str,
@@ -100,6 +138,25 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
         docs.append({"chunk_id": r[identifier_field], "title": r[title_field], "chunk": r[content_field]})
     return ToolResult({"sources": docs}, ToolResultDirection.TO_CLIENT)
 
+async def _booking_tool(args: Any) -> ToolResult:
+    from data.load_data import get_bookings_data
+    bookings = get_bookings_data()
+    flight = args.get("flight")
+    name = args.get("name")
+    if flight:
+        bookings = [b for b in bookings if b["flight"] == flight]
+    if name:
+        bookings = [b for b in bookings if b["name"].lower() == name.lower()]
+    return ToolResult({"bookings": bookings}, ToolResultDirection.TO_CLIENT)
+
+async def _flight_tool(args: Any) -> ToolResult:
+    from data.load_data import get_flights_data
+    flights = get_flights_data()
+    flight = args.get("flight")
+    if flight:
+        flights = [f for f in flights if f["id"] == flight]
+    return ToolResult({"flights": flights}, ToolResultDirection.TO_CLIENT)
+
 def attach_rag_tools(rtmt: RTMiddleTier,
     credentials: AzureKeyCredential | DefaultAzureCredential,
     search_endpoint: str, search_index: str,
@@ -116,3 +173,9 @@ def attach_rag_tools(rtmt: RTMiddleTier,
 
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
+
+def attach_booking_tools(rtmt: RTMiddleTier, get_bookings_func: Any) -> None:
+    rtmt.tools["get_bookings"] = Tool(schema=_booking_tool_schema, target=lambda args: _booking_tool(args))
+
+def attach_flight_tools(rtmt: RTMiddleTier, get_flights_func: Any) -> None:
+    rtmt.tools["get_flights"] = Tool(schema=_flight_tool_schema, target=lambda args: _flight_tool(args))

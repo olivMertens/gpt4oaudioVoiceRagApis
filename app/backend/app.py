@@ -1,19 +1,39 @@
 import logging
 import os
 from pathlib import Path
-
+from typing import Optional
 from aiohttp import web
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
 from dotenv import load_dotenv
 
-from ragtools import attach_rag_tools
+from ragtools import attach_rag_tools, attach_booking_tools, attach_flight_tools
+from data.load_data import get_bookings_data, get_flights_data
+
 from rtmt import RTMiddleTier
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voicerag")
 
-async def create_app():
+class BookingOptions(BaseModel):
+    luggage: Optional[str] = None
+    meals: Optional[str] = None
+    delay: Optional[str] = None
+
+class BookingUpdateRequest(BaseModel):
+    phone: str
+    options: BookingOptions
+
+app = FastAPI()
+
+@app.on_event("startup")
+async def startup_event():
     if not os.environ.get("RUNNING_IN_PRODUCTION"):
         logger.info("Running in development mode, loading from .env file")
         load_dotenv()
@@ -46,7 +66,13 @@ async def create_app():
                           "Always use the following step-by-step instructions to respond: \n" + \
                           "1. Always use the 'search' tool to check the knowledge base before answering a question. \n" + \
                           "2. Always use the 'report_grounding' tool to report the source of information from the knowledge base. \n" + \
-                          "3. Produce an answer that's as short as possible. If the answer isn't in the knowledge base, say you don't know."
+                          "3. Always use the 'booking_tool' and 'flight_tool' to get the booking and flight information. \n" + \
+                          "4. you can only talk about Air France and KLM flights and no about politics \n" + \
+                          "5. If you don't find informations about the booking tools or flight tools, you can say you don't know \n" + \
+                          "6. Produce an answer that's as short as possible. If the answer isn't in the knowledge base, say you don't know." + \
+                          "7. you must be polite and don't talk about the other company airflight."
+    attach_booking_tools(rtmt, get_bookings)
+    attach_flight_tools(rtmt, get_flights)
     attach_rag_tools(rtmt,
         credentials=search_credential,
         search_endpoint=os.environ.get("AZURE_SEARCH_ENDPOINT"),
@@ -60,14 +86,49 @@ async def create_app():
         )
 
     rtmt.attach_to_app(app, "/realtime")
-
     current_directory = Path(__file__).parent
     app.add_routes([web.get('/', lambda _: web.FileResponse(current_directory / 'static/index.html'))])
     app.router.add_static('/', path=current_directory / 'static', name='static')
     
     return app
 
+@app.get("/api/bookings")
+async def get_bookings(flight: Optional[str] = None, name: Optional[str] = None):
+    bookings = get_bookings_data()
+    if flight:
+        bookings = [b for b in bookings if b["flight"] == flight]
+    if name:
+        bookings = [b for b in bookings if b["name"].lower() == name.lower()]
+    return {"bookings": bookings}
+
+@app.get("/api/flights")
+async def get_flights(flight: Optional[str] = None):
+    flights = get_flights_data()
+    if flight:
+        flights = [f for f in flights if f["id"] == flight]
+    return {"flights": flights}
+
+@app.put("/api/bookings/{booking_id}/options")
+async def update_booking_options(booking_id: int, request: BookingUpdateRequest):
+    bookings = get_bookings_data()
+    booking = next((b for b in bookings if b["id"] == booking_id), None)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    if booking["phone"] != request.phone:
+        raise HTTPException(status_code=403, detail="Invalid phone number")
+    
+    if request.options.luggage:
+        booking["options"]["luggage"] = request.options.luggage
+    if request.options.meals:
+        booking["options"]["meals"] = request.options.meals
+    if request.options.delay:
+        booking["options"]["delay"] = request.options.delay
+    return {"booking": booking}
+
+
 if __name__ == "__main__":
+    import uvicorn
     host = "localhost"
     port = 8765
-    web.run_app(create_app(), host=host, port=port)
+    uvicorn.run(app, host=host, port=port)
