@@ -139,18 +139,20 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
     return ToolResult({"sources": docs}, ToolResultDirection.TO_CLIENT)
 
 async def _booking_tool(args: Any) -> ToolResult:
+    print(f"Retrieving bookings for flight '{args.get('flight')}' and name '{args.get('name')}'.")
     async with httpx.AsyncClient() as client:
         response = await client.get("http://localhost:8765/api/bookings", params=args)
         response.raise_for_status()
         bookings = response.json()
-    return ToolResult({"bookings": bookings}, ToolResultDirection.TO_CLIENT)
+    return ToolResult({"bookings": bookings}, ToolResultDirection.TO_SERVER)
 
 async def _flight_tool(args: Any) -> ToolResult:
+    print(f"Retrieving flights for flight '{args.get('flight')}'.")
     async with httpx.AsyncClient() as client:
         response = await client.get("http://localhost:8765/api/flights", params=args)
         response.raise_for_status()
         flights = response.json()
-    return ToolResult({"flights": flights}, ToolResultDirection.TO_CLIENT)
+    return ToolResult({"flights": flights}, ToolResultDirection.TO_SERVER)
 
 def attach_rag_tools(rtmt: RTMiddleTier,
     credentials: AzureKeyCredential | DefaultAzureCredential,
@@ -168,9 +170,5 @@ def attach_rag_tools(rtmt: RTMiddleTier,
 
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
-
-def attach_booking_tools(rtmt: RTMiddleTier, _booking_tool) -> None:
     rtmt.tools["get_bookings"] = Tool(schema=_booking_tool_schema, target=lambda args: _booking_tool(args))
-
-def attach_flight_tools(rtmt: RTMiddleTier, _flight_tool) -> None:
     rtmt.tools["get_flights"] = Tool(schema=_flight_tool_schema, target=lambda args: _flight_tool(args))
