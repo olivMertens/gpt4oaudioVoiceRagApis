@@ -4,36 +4,23 @@ import os
 import subprocess
 
 from azure.core.exceptions import ResourceExistsError
-from azure.identity import AzureDeveloperCliCredential
+from azure.identity import AzureDeveloperCliCredential, get_bearer_token_provider
+from azure.search.documents import SearchClient
 from azure.search.documents.indexes import SearchIndexClient, SearchIndexerClient
 from azure.search.documents.indexes.models import (
-    AzureOpenAIEmbeddingSkill,
     AzureOpenAIParameters,
     AzureOpenAIVectorizer,
-    FieldMapping,
     HnswAlgorithmConfiguration,
     HnswParameters,
-    IndexProjectionMode,
-    InputFieldMappingEntry,
-    OutputFieldMappingEntry,
     SearchableField,
     SearchField,
     SearchFieldDataType,
     SearchIndex,
-    SearchIndexer,
-    SearchIndexerDataContainer,
-    SearchIndexerDataSourceConnection,
-    SearchIndexerDataSourceType,
-    SearchIndexerIndexProjections,
-    SearchIndexerIndexProjectionSelector,
-    SearchIndexerIndexProjectionsParameters,
-    SearchIndexerSkillset,
     SemanticConfiguration,
     SemanticField,
     SemanticPrioritizedFields,
     SemanticSearch,
     SimpleField,
-    SplitSkill,
     VectorSearch,
     VectorSearchAlgorithmMetric,
     VectorSearchProfile,
@@ -41,6 +28,9 @@ from azure.search.documents.indexes.models import (
 from azure.storage.blob import BlobServiceClient
 from dotenv import load_dotenv
 from rich.logging import RichHandler
+from openai import AzureOpenAI
+import uuid
+import json
 
 
 def load_azd_env():
@@ -61,19 +51,6 @@ def load_azd_env():
 
 def setup_index(azure_credential, index_name, azure_search_endpoint, azure_storage_connection_string, azure_storage_container, azure_openai_embedding_endpoint, azure_openai_embedding_deployment, azure_openai_embedding_model, azure_openai_embeddings_dimensions):
     index_client = SearchIndexClient(azure_search_endpoint, azure_credential)
-    indexer_client = SearchIndexerClient(azure_search_endpoint, azure_credential)
-
-    data_source_connections = indexer_client.get_data_source_connections()
-    if index_name in [ds.name for ds in data_source_connections]:
-        logger.info(f"Data source connection {index_name} already exists, not re-creating")
-    else:
-        logger.info(f"Creating data source connection: {index_name}")
-        indexer_client.create_data_source_connection(
-            data_source_connection=SearchIndexerDataSourceConnection(
-                name=index_name, 
-                type=SearchIndexerDataSourceType.AZURE_BLOB,
-                connection_string=azure_storage_connection_string,
-                container=SearchIndexerDataContainer(name=azure_storage_container)))
 
     index_names = [index.name for index in index_client.list_indexes()]
     if index_name in index_names:
@@ -85,7 +62,7 @@ def setup_index(azure_credential, index_name, azure_search_endpoint, azure_stora
                 name=index_name,
                 fields=[
                     SearchableField(name="chunk_id", key=True, analyzer_name="keyword", sortable=True),
-                    SimpleField(name="parent_id", type=SearchFieldDataType.String, filterable=True),
+                    SimpleField(name="category", type=SearchFieldDataType.String, filterable=True),
                     SearchableField(name="title"),
                     SearchableField(name="chunk"),
                     SearchField(
@@ -125,94 +102,41 @@ def setup_index(azure_credential, index_name, azure_search_endpoint, azure_stora
                 )
             )
         )
+        upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment)
 
-    skillsets = indexer_client.get_skillsets()
-    if index_name in [skillset.name for skillset in skillsets]:
-        logger.info(f"Skillset {index_name} already exists, not re-creating")
-    else:
-        logger.info(f"Creating skillset: {index_name}")
-        indexer_client.create_skillset(
-            skillset=SearchIndexerSkillset(
-                name=index_name,
-                skills=[
-                    SplitSkill(
-                        text_split_mode="pages",
-                        context="/document",
-                        maximum_page_length=2000,
-                        page_overlap_length=500,
-                        inputs=[InputFieldMappingEntry(name="text", source="/document/content")],
-                        outputs=[OutputFieldMappingEntry(name="textItems", target_name="pages")]),
-                    AzureOpenAIEmbeddingSkill(
-                        context="/document/pages/*",
-                        resource_uri=azure_openai_embedding_endpoint,
-                        api_key=None,
-                        deployment_id=azure_openai_embedding_deployment,
-                        model_name=azure_openai_embedding_model,
-                        dimensions=azure_openai_embeddings_dimensions,
-                        inputs=[InputFieldMappingEntry(name="text", source="/document/pages/*")],
-                        outputs=[OutputFieldMappingEntry(name="embedding", target_name="text_vector")])
-                ],
-                index_projections=SearchIndexerIndexProjections(
-                    selectors=[
-                        SearchIndexerIndexProjectionSelector(
-                            target_index_name=index_name,
-                            parent_key_field_name="parent_id",
-                            source_context="/document/pages/*",
-                            mappings=[
-                                InputFieldMappingEntry(name="chunk", source="/document/pages/*"),
-                                InputFieldMappingEntry(name="text_vector", source="/document/pages/*/text_vector"),
-                                InputFieldMappingEntry(name="title", source="/document/metadata_storage_name")
-                            ]
-                        )
-                    ],
-                    parameters=SearchIndexerIndexProjectionsParameters(
-                        projection_mode=IndexProjectionMode.SKIP_INDEXING_PARENT_DOCUMENTS
-                    )
-                )))
-
-    indexers = indexer_client.get_indexers()
-    if index_name in [indexer.name for indexer in indexers]:
-        logger.info(f"Indexer {index_name} already exists, not re-creating")
-    else:
-        indexer_client.create_indexer(
-            indexer=SearchIndexer(
-                name=index_name,
-                data_source_name=index_name,
-                skillset_name=index_name,
-                target_index_name=index_name,        
-                field_mappings=[FieldMapping(source_field_name="metadata_storage_name", target_field_name="title")]
-            )
-        )
-
-def upload_documents(azure_credential, indexer_name, azure_search_endpoint, azure_storage_endpoint, azure_storage_container):
-    indexer_client = SearchIndexerClient(azure_search_endpoint, azure_credential)
-    # Upload the documents in /data folder to the blob storage container
-    blob_client = BlobServiceClient(
-        account_url=azure_storage_endpoint, credential=azure_credential,
-        max_single_put_size=4 * 1024 * 1024
+def upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment):
+    search_client = SearchClient(endpoint=azure_search_endpoint, index_name=index_name, credential=azure_credential)
+    openai_client = AzureOpenAI(
+        azure_endpoint=azure_openai_embedding_endpoint,
+        azure_deployment=azure_openai_embedding_deployment,
+        azure_ad_token_provider=get_bearer_token_provider(azure_credential, "https://cognitiveservices.azure.com/.default"),
+        api_version="2023-05-15"
     )
-    container_client = blob_client.get_container_client(azure_storage_container)
-    if not container_client.exists():
-        container_client.create_container()
-    existing_blobs = [blob.name for blob in container_client.list_blobs()]
 
-    # Open each file in /data folder
-    for file in os.scandir("data"):
-        with open(file.path, "rb") as opened_file:
-            filename = os.path.basename(file.path)
-            # Check if blob already exists
-            if filename in existing_blobs:
-                logger.info("Blob already exists, skipping file: %s", filename)
-            else:
-                logger.info("Uploading blob for file: %s", filename)
-                blob_client = container_client.upload_blob(filename, opened_file, overwrite=True)
+    def generate_embeddings(text):
+        response = openai_client.embeddings.create(
+            input=text,
+            model=azure_openai_embedding_deployment,
+        )
+        return response.data[0].embedding
 
-    # Start the indexer
-    try:
-        indexer_client.run_indexer(indexer_name)
-        logger.info("Indexer started. Any unindexed blobs should be indexed in a few minutes, check the Azure Portal for status.")
-    except ResourceExistsError:
-        logger.info("Indexer already running, not starting again")
+    with open("data/faq.json", "r") as file:
+        faq = json.load(file)
+        faq_documents = []
+
+        for i, item in enumerate(faq):
+            faq_documents.append({
+                "chunk_id": str(uuid.uuid4()),
+                "category": item["category"],
+                "title": item["title"],
+                "chunk": item["chunk"],
+                "text_vector": generate_embeddings(item["chunk"])
+            })
+        
+        search_client.upload_documents(faq_documents)
+        logger.info(f'Uploaded {len(faq_documents)} documents to Azure AI Search index {index_name}')
+
+
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.WARNING, format="%(message)s", datefmt="[%X]", handlers=[RichHandler(rich_tracebacks=True)])
@@ -253,8 +177,8 @@ if __name__ == "__main__":
         azure_openai_embedding_model=AZURE_OPENAI_EMBEDDING_MODEL,
         azure_openai_embeddings_dimensions=EMBEDDINGS_DIMENSIONS)
 
-    upload_documents(azure_credential,
-        indexer_name=AZURE_SEARCH_INDEX,
-        azure_search_endpoint=AZURE_SEARCH_ENDPOINT,
-        azure_storage_endpoint=AZURE_STORAGE_ENDPOINT,
-        azure_storage_container=AZURE_STORAGE_CONTAINER)
+    # upload_documents(azure_credential,
+    #     index_name=AZURE_SEARCH_INDEX,
+    #     azure_search_endpoint=AZURE_SEARCH_ENDPOINT,
+    #     azure_openai_embedding_endpoint=AZURE_OPENAI_EMBEDDING_ENDPOINT,
+    #     azure_openai_embedding_deployment=AZURE_OPENAI_EMBEDDING_DEPLOYMENT)
