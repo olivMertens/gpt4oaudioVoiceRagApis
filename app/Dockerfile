@@ -13,6 +13,7 @@ FROM python:3.12-slim AS production-stage
 
 WORKDIR /app
 COPY --from=build-stage /backend/static /app/static
+COPY ./api /app/api
 COPY ./backend/ /app
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -21,5 +22,6 @@ ENV PYTHONUNBUFFERED=1
 RUN python -m pip install -r requirements.txt
 
 RUN python -m pip install gunicorn
+RUN python -m pip install uvicorn
 
 CMD ["python3", "-m", "gunicorn", "app:create_app", "-b", "0.0.0.0:8000", "--worker-class", "aiohttp.GunicornWebWorker"]
