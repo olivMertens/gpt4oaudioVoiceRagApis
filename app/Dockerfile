@@ -21,7 +21,6 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
  
 RUN python -m pip install -r requirements.txt
- 
-RUN python -m pip install gunicorn
- 
+EXPOSE 8000
+EXPOSE 8765
 CMD ["./start.sh"]
