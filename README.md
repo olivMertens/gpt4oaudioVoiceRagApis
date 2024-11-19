@@ -92,6 +92,31 @@ The steps below will provision Azure resources and deploy the application code t
 
 1. (Optional) This is the point where you can customize the deployment by setting azd environment variables, in order to [use existing services](docs/existing_services.md) or [customize the voice choice](docs/customizing_deploy.md).
 
+1. Run this command to ensure that the [infrastructure](../infra/main.bicep) does not make a brand new OpenAI service:
+
+    ```bash
+    azd env set AZURE_OPENAI_REUSE_EXISTING true
+    ```
+
+2. Run this command to ensure that the [infrastructure](../infra/main.bicep) assigns the proper RBAC roles for accessing the OpenAI resource:
+
+    ```bash
+    azd env set AZURE_OPENAI_RESOURCE_GROUP rg-klm
+    ```
+
+3. Run this command to point the app code at your Azure OpenAI endpoint:
+
+    ```bash
+    azd env set AZURE_OPENAI_ENDPOINT https://cog-fbgwp5e2xxwoo.openai.azure.com
+    ```
+
+4. Run this command to point the app code at your Azure OpenAI real-time deployment. Note that the deployment name may be different from the model name:
+
+    ```bash
+    azd env set AZURE_OPENAI_REALTIME_DEPLOYMENT gpt-4o-realtime-preview
+    ```
+
+
 1. Run this single command to provision the resources, deploy the code, and setup integrated vectorization for the sample data:
 
    ```shell
