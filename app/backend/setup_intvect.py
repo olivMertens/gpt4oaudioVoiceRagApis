@@ -102,6 +102,7 @@ def setup_index(azure_credential, index_name, azure_search_endpoint, azure_stora
                 )
             )
         )
+        upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment)
 
 def upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment):
     search_client = SearchClient(endpoint=azure_search_endpoint, index_name=index_name, credential=azure_credential)
@@ -176,8 +177,8 @@ if __name__ == "__main__":
         azure_openai_embedding_model=AZURE_OPENAI_EMBEDDING_MODEL,
         azure_openai_embeddings_dimensions=EMBEDDINGS_DIMENSIONS)
 
-    upload_documents(azure_credential,
-        index_name=AZURE_SEARCH_INDEX,
-        azure_search_endpoint=AZURE_SEARCH_ENDPOINT,
-        azure_openai_embedding_endpoint=AZURE_OPENAI_EMBEDDING_ENDPOINT,
-        azure_openai_embedding_deployment=AZURE_OPENAI_EMBEDDING_DEPLOYMENT)
+    # upload_documents(azure_credential,
+    #     index_name=AZURE_SEARCH_INDEX,
+    #     azure_search_endpoint=AZURE_SEARCH_ENDPOINT,
+    #     azure_openai_embedding_endpoint=AZURE_OPENAI_EMBEDDING_ENDPOINT,
+    #     azure_openai_embedding_deployment=AZURE_OPENAI_EMBEDDING_DEPLOYMENT)
