@@ -1,12 +1,15 @@
 import re, httpx
 from typing import Any
-
+import logging
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import DefaultAzureCredential
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.models import VectorizableTextQuery
 
 from rtmt import RTMiddleTier, Tool, ToolResult, ToolResultDirection
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("toolingCall")
+
 
 _search_tool_schema = {
     "type": "function",
@@ -165,12 +168,14 @@ def attach_rag_tools(rtmt: RTMiddleTier,
     if not isinstance(credentials, AzureKeyCredential):
         credentials.get_token("https://search.azure.com/.default") # warm this up before we start getting requests
     search_client = SearchClient(search_endpoint, search_index, credentials, user_agent="RTMiddleTier")
-
+    logger.info("Attaching Rag tool")
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
 
-def attach_booking_tools(rtmt: RTMiddleTier, _booking_tool) -> None:
+def attach_booking_tools(rtmt: RTMiddleTier, _booking_tool: Any) -> None:
+    logger.info("Attaching booking tool")
     rtmt.tools["get_bookings"] = Tool(schema=_booking_tool_schema, target=lambda args: _booking_tool(args))
 
-def attach_flight_tools(rtmt: RTMiddleTier, _flight_tool) -> None:
+def attach_flight_tools(rtmt: RTMiddleTier, _flight_tool: Any) -> None:
+    logger.info("Attaching flight tool")
     rtmt.tools["get_flights"] = Tool(schema=_flight_tool_schema, target=lambda args: _flight_tool(args))

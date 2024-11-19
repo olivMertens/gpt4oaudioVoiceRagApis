@@ -5,7 +5,6 @@ from aiohttp import web
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
 from dotenv import load_dotenv
-import httpx
 
 from ragtools import attach_rag_tools, attach_booking_tools, attach_flight_tools
 from rtmt import RTMiddleTier
