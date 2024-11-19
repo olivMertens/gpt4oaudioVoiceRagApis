@@ -140,14 +140,14 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
 
 async def _booking_tool(args: Any) -> ToolResult:
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://0.0.0.0:8765/api/bookings", params=args)
+        response = await client.get("http://localhost:8765/api/bookings", params=args)
         response.raise_for_status()
         bookings = response.json()
     return ToolResult({"bookings": bookings}, ToolResultDirection.TO_CLIENT)
 
 async def _flight_tool(args: Any) -> ToolResult:
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://0.0.0.0:8765/api/flights", params=args)
+        response = await client.get("http://localhost:8765/api/flights", params=args)
         response.raise_for_status()
         flights = response.json()
     return ToolResult({"flights": flights}, ToolResultDirection.TO_CLIENT)
