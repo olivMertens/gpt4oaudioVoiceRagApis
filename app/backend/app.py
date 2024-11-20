@@ -6,7 +6,7 @@ from azure.core.credentials import AzureKeyCredential
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
 from dotenv import load_dotenv
 
-from ragtools import attach_rag_tools, attach_booking_tools, attach_flight_tools
+from ragtools import attach_rag_tools
 from rtmt import RTMiddleTier
 
 logging.basicConfig(level=logging.INFO)
@@ -62,8 +62,6 @@ async def create_app():
         title_field=os.environ.get("AZURE_SEARCH_TITLE_FIELD") or "title",
         use_vector_query=(os.environ.get("AZURE_SEARCH_USE_VECTOR_QUERY") == "true") or True
         )
-    attach_booking_tools(rtmt, attach_booking_tools)
-    attach_flight_tools(rtmt, attach_flight_tools)
 
     rtmt.attach_to_app(app, "/realtime")
     current_directory = Path(__file__).parent
