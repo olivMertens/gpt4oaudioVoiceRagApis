@@ -59,6 +59,19 @@ async def get_flights(flight: Optional[str] = None):
         flights = [f for f in flights if f["id"] == flight]
     return {"flights": flights}
 
+@app.get("/api/flights/{flight_id}")
+async def get_flight_by_id(flight_id: str):
+    """
+    Retrieve a specific flight by its ID.
+    
+    - **flight_id**: The unique identifier of the flight.
+    """
+    flights = get_flights_data()
+    flight = next((f for f in flights if f["id"] == flight_id), None)
+    if not flight:
+        raise HTTPException(status_code=404, detail="Flight not found")
+    return {"flight": flight}
+
 if __name__ == "__main__":
     import uvicorn
     host = "0.0.0.0"
