@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-
 from aiohttp import web
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
@@ -33,7 +32,6 @@ async def create_app():
     search_credential = AzureKeyCredential(search_key) if search_key else credential
     
     app = web.Application()
-
     rtmt = RTMiddleTier(
         credentials=llm_credential,
         endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
@@ -43,10 +41,16 @@ async def create_app():
     rtmt.system_message = "You are a helpful assistant. Only answer questions based on information you searched in the knowledge base, accessible with the 'search' tool. " + \
                           "The user is listening to answers with audio, so it's *super* important that answers are as short as possible, a single sentence if at all possible. " + \
                           "Never read file names or source names or keys out loud. " + \
-                          "Always use the following step-by-step instructions to respond: \n" + \
-                          "1. Always use the 'search' tool to check the knowledge base before answering a question. \n" + \
-                          "2. Always use the 'report_grounding' tool to report the source of information from the knowledge base. \n" + \
-                          "3. Produce an answer that's as short as possible. If the answer isn't in the knowledge base, say you don't know."
+                          "Use the following rules to govern your workflow: \n" + \
+                          "- Always use the 'booking_tool' and 'flight_tool' to get the booking and flight information. \n" + \
+                          "- Always use the 'report_grounding' tool to report the source of information from the knowledge base. \n" + \
+                          "- Always use the 'search' tool to check the knowledge base before answering a question. \n" + \
+                          "- you can only talk about Air France and KLM flights and no about politics \n" + \
+                          "- If you don't find informations about the booking tools or flight tools, you can say you don't know \n" + \
+                          "- Produce an answer that's as short as possible. If the answer isn't in the knowledge base, say you don't know." + \
+                          "- you must be polite and don't talk about the other company airflight."
+    
+
     attach_rag_tools(rtmt,
         credentials=search_credential,
         search_endpoint=os.environ.get("AZURE_SEARCH_ENDPOINT"),
@@ -60,14 +64,14 @@ async def create_app():
         )
 
     rtmt.attach_to_app(app, "/realtime")
-
     current_directory = Path(__file__).parent
     app.add_routes([web.get('/', lambda _: web.FileResponse(current_directory / 'static/index.html'))])
     app.router.add_static('/', path=current_directory / 'static', name='static')
-    
     return app
+
 
 if __name__ == "__main__":
     host = "localhost"
-    port = 8765
-    web.run_app(create_app(), host=host, port=port)
+    port = 8000
+    app = create_app()
+    web.run_app(app, host=host, port=port)

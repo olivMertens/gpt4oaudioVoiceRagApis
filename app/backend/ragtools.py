@@ -1,12 +1,15 @@
-import re
+import re, httpx
 from typing import Any
-
+import logging
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import DefaultAzureCredential
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.models import VectorizableTextQuery
 
 from rtmt import RTMiddleTier, Tool, ToolResult, ToolResultDirection
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("toolingCall")
+
 
 _search_tool_schema = {
     "type": "function",
@@ -45,6 +48,44 @@ _grounding_tool_schema = {
             }
         },
         "required": ["sources"],
+        "additionalProperties": False
+    }
+}
+
+_booking_tool_schema = {
+    "type": "function",
+    "name": "get_bookings",
+    "description": "Retrieve booking information for Air France and KLM flights in the bookings api.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "flight": {
+                "type": "string",
+                "description": "Flight ID"
+            },
+            "name": {
+                "type": "string",
+                "description": "Name of the person"
+            }
+        },
+        "required": [],
+        "additionalProperties": False
+    }
+}
+
+_flight_tool_schema = {
+    "type": "function",
+    "name": "get_flights",
+    "description": "Retrieve flight information for Air France and KLM flights in the flight api.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "flight": {
+                "type": "string",
+                "description": "Flight ID"
+            }
+        },
+        "required": [],
         "additionalProperties": False
     }
 }
@@ -100,6 +141,22 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
         docs.append({"chunk_id": r[identifier_field], "title": r[title_field], "chunk": r[content_field]})
     return ToolResult({"sources": docs}, ToolResultDirection.TO_CLIENT)
 
+async def _booking_tool(args: Any) -> ToolResult:
+    print(f"Retrieving bookings for flight '{args.get('flight')}' and name '{args.get('name')}'.")
+    async with httpx.AsyncClient() as client:
+        response = await client.get("http://localhost:8765/api/bookings", params=args)
+        response.raise_for_status()
+        bookings = response.json()
+    return ToolResult({"bookings": bookings}, ToolResultDirection.TO_SERVER)
+
+async def _flight_tool(args: Any) -> ToolResult:
+    print(f"Retrieving flights for flight '{args.get('flight')}'.")
+    async with httpx.AsyncClient() as client:
+        response = await client.get("http://localhost:8765/api/flights", params=args)
+        response.raise_for_status()
+        flights = response.json()
+    return ToolResult({"flights": flights}, ToolResultDirection.TO_SERVER)
+
 def attach_rag_tools(rtmt: RTMiddleTier,
     credentials: AzureKeyCredential | DefaultAzureCredential,
     search_endpoint: str, search_index: str,
@@ -113,6 +170,12 @@ def attach_rag_tools(rtmt: RTMiddleTier,
     if not isinstance(credentials, AzureKeyCredential):
         credentials.get_token("https://search.azure.com/.default") # warm this up before we start getting requests
     search_client = SearchClient(search_endpoint, search_index, credentials, user_agent="RTMiddleTier")
-
+    logger.info("Attaching Rag tool")
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
+    
+    logger.info("Attaching booking tool")
+    rtmt.tools["get_bookings"] = Tool(schema=_booking_tool_schema, target=lambda args: _booking_tool(args))
+
+    logger.info("Attaching flight tool")
+    rtmt.tools["get_flights"] = Tool(schema=_flight_tool_schema, target=lambda args: _flight_tool(args))

@@ -1,0 +1,31 @@
+def get_bookings_data():
+    return [
+        {"id": 1, "name": "John Doe", "flight": "AF1234", "brand": "Air France", "cost": 500, "currency": "USD", "phone": "+1-202-555-0173", "options": {"luggage": "20kg", "meals": "standard", "delay": "on time"}},
+        {"id": 2, "name": "Jane Smith", "flight": "KL5678", "brand": "KLM", "cost": 450, "currency": "GBP", "phone": "+44-20-7946-0958", "options": {"luggage": "15kg", "meals": "vegetarian", "delay": "10 mins"}},
+        {"id": 3, "name": "Carlos Mendez", "flight": "AF2345", "brand": "Air France", "cost": 600, "currency": "EUR", "phone": "+34-91-123-4567", "options": {"luggage": "25kg", "meals": "standard", "delay": "on time"}},
+        {"id": 4, "name": "Yuki Tanaka", "flight": "KL6789", "brand": "KLM", "cost": 550, "currency": "JPY", "phone": "+81-3-1234-5678", "options": {"luggage": "20kg", "meals": "vegan", "delay": "5 mins"}},
+        {"id": 5, "name": "Liu Wei", "flight": "AF3456", "brand": "Air France", "cost": 700, "currency": "CNY", "phone": "+86-10-1234-5678", "options": {"luggage": "30kg", "meals": "standard", "delay": "on time"}},
+        {"id": 6, "name": "Fatima Al-Farsi", "flight": "KL7890", "brand": "KLM", "cost": 480, "currency": "AED", "phone": "+971-4-123-4567", "options": {"luggage": "18kg", "meals": "halal", "delay": "15 mins"}},
+        {"id": 7, "name": "Olga Ivanova", "flight": "AF4567", "brand": "Air France", "cost": 620, "currency": "RUB", "phone": "+7-495-123-4567", "options": {"luggage": "22kg", "meals": "standard", "delay": "on time"}},
+        {"id": 8, "name": "Mohammed Khan", "flight": "KL8901", "brand": "KLM", "cost": 530, "currency": "INR", "phone": "+91-11-1234-5678", "options": {"luggage": "20kg", "meals": "halal", "delay": "10 mins"}},
+        {"id": 9, "name": "Anna Müller", "flight": "AF5678", "brand": "Air France", "cost": 580, "currency": "EUR", "phone": "+49-30-1234-5678", "options": {"luggage": "25kg", "meals": "standard", "delay": "on time"}},
+        {"id": 10, "name": "Santiago Lopez", "flight": "KL9012", "brand": "KLM", "cost": 490, "currency": "EUR", "phone": "+34-91-765-4321", "options": {"luggage": "15kg", "meals": "vegetarian", "delay": "5 mins"}},
+        {"id": 11, "name": "Aisha Ahmed", "flight": "AF6789", "brand": "Air France", "cost": 650, "currency": "EGP", "phone": "+20-2-1234-5678", "options": {"luggage": "28kg", "meals": "halal", "delay": "on time"}},
+        {"id": 12, "name": "Nina Petrova", "flight": "KL0123", "brand": "KLM", "cost": 520, "currency": "RUB", "phone": "+7-812-123-4567", "options": {"luggage": "20kg", "meals": "vegan", "delay": "10 mins"}}
+    ]
+
+def get_flights_data():
+    return [
+        {"id": "AF1234", "destination": "CDG", "departure": "JFK", "brand": "Air France", "weather": {"departure": {"condition": "Sunny", "temperature": "25°C"}, "arrival": {"condition": "Cloudy", "temperature": "18°C"}}, "context": "International flight from New York to Paris"},
+        {"id": "KL5678", "destination": "AMS", "departure": "LHR", "brand": "KLM", "weather": {"departure": {"condition": "Rainy", "temperature": "15°C"}, "arrival": {"condition": "Sunny", "temperature": "20°C"}}, "context": "International flight from London to Amsterdam"},
+        {"id": "AF2345", "destination": "CDG", "departure": "LAX", "brand": "Air France", "weather": {"departure": {"condition": "Sunny", "temperature": "28°C"}, "arrival": {"condition": "Foggy", "temperature": "16°C"}}, "context": "International flight from Los Angeles to Paris"},
+        {"id": "KL6789", "destination": "AMS", "departure": "NRT", "brand": "KLM", "weather": {"departure": {"condition": "Clear", "temperature": "22°C"}, "arrival": {"condition": "Rainy", "temperature": "17°C"}}, "context": "International flight from Tokyo to Amsterdam"},
+        {"id": "AF3456", "destination": "CDG", "departure": "PEK", "brand": "Air France", "weather": {"departure": {"condition": "Smoggy", "temperature": "30°C"}, "arrival": {"condition": "Sunny", "temperature": "24°C"}}, "context": "International flight from Beijing to Paris"},
+        {"id": "KL7890", "destination": "AMS", "departure": "DXB", "brand": "KLM", "weather": {"departure": {"condition": "Hot", "temperature": "35°C"}, "arrival": {"condition": "Cool", "temperature": "20°C"}}, "context": "International flight from Dubai to Amsterdam"},
+        {"id": "AF4567", "destination": "CDG", "departure": "SVO", "brand": "Air France", "weather": {"departure": {"condition": "Snowy", "temperature": "-5°C"}, "arrival": {"condition": "Clear", "temperature": "10°C"}}, "context": "International flight from Moscow to Paris"},
+        {"id": "KL8901", "destination": "AMS", "departure": "DEL", "brand": "KLM", "weather": {"departure": {"condition": "Hot", "temperature": "40°C"}, "arrival": {"condition": "Rainy", "temperature": "18°C"}}, "context": "International flight from Delhi to Amsterdam"},
+        {"id": "AF5678", "destination": "CDG", "departure": "FRA", "brand": "Air France", "weather": {"departure": {"condition": "Cloudy", "temperature": "20°C"}, "arrival": {"condition": "Sunny", "temperature": "22°C"}}, "context": "International flight from Frankfurt to Paris"},
+        {"id": "KL9012", "destination": "AMS", "departure": "MAD", "brand": "KLM", "weather": {"departure": {"condition": "Sunny", "temperature": "30°C"}, "arrival": {"condition": "Clear", "temperature": "25°C"}}, "context": "International flight from Madrid to Amsterdam"},
+        {"id": "AF6789", "destination": "CDG", "departure": "CAI", "brand": "Air France", "weather": {"departure": {"condition": "Hot", "temperature": "35°C"}, "arrival": {"condition": "Cool", "temperature": "20°C"}}, "context": "International flight from Cairo to Paris"},
+        {"id": "KL0123", "destination": "AMS", "departure": "LED", "brand": "KLM", "weather": {"departure": {"condition": "Cold", "temperature": "-10°C"}, "arrival": {"condition": "Clear", "temperature": "15°C"}}, "context": "International flight from St. Petersburg to Amsterdam"}
+    ]
