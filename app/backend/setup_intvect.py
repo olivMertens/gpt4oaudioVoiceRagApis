@@ -102,7 +102,7 @@ def setup_index(azure_credential, index_name, azure_search_endpoint, azure_stora
                 )
             )
         )
-        upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment)
+    upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment)
 
 def upload_documents(azure_credential, index_name, azure_search_endpoint, azure_openai_embedding_endpoint, azure_openai_embedding_deployment):
     search_client = SearchClient(endpoint=azure_search_endpoint, index_name=index_name, credential=azure_credential)

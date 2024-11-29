@@ -218,5 +218,25 @@
         "category": "Animaux de compagnie",
         "title": "Transport de chiens, de chats et autres animaux de compagnie",
         "chunk": "Air France vous accompagne dans vos démarches pour le confort et la sécurité de vos animaux à bord. Consultez les formalités à respecter pour le transport d'animaux."
+    },
+    {
+        "category": "SkyPriority",
+        "title": "Fast Track",
+        "chunk": "Priority access to check-in counters, security and immigration controls (at certain airports), as well as boarding."
+    },
+    {
+        "category": "SkyPriority",
+        "title": "Front Seats",
+        "chunk": "Passengers can choose seats at the front of the plane, including seats near emergency exits, often at no extra cost."
+    },
+    {
+        "category": "SkyPriority",
+        "title": "Priority Baggage Delivery",
+        "chunk": "Your baggage is among the first to be delivered upon arrival."
+    },
+    {
+        "category": "SkyPriority",
+        "title": "Differences between Gold and Platinum",
+        "chunk": "Platinum members enjoy all the benefits of Gold members, with additional services such as access to exclusive lounges and higher mileage bonuses."
     }
 ]

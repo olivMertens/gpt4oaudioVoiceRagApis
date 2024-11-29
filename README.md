@@ -155,6 +155,9 @@ You can run this app locally using either the Azure services you provisioned by 
    Windows:
 
    ```pwsh
+   cd app/api
+   uvicorn main:app --host 0.0.0.0 --port 8765
+   cd ../../
    pwsh .\scripts\start.ps1
    ```
 
@@ -163,6 +166,9 @@ You can run this app locally using either the Azure services you provisioned by 
    ```bash
    ./scripts/start.sh
    ```
+
+   you can verify if the api is running by navigating to [http://localhost:8765/health](http://localhost:8765/health)
+   the app will be available on [http://localhost:8000](http://localhost:8000)
 
 4. The app is available on [http://localhost:8765](http://localhost:8765).
 
