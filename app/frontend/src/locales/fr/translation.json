@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Parlez à vos données",
+        "title": "Parlez à votre Air France KLM assistant",
         "footer": "Créée avec Azure AI Search + Azure OpenAI",
         "stopRecording": "Arrêter l'enregistrement",
         "startRecording": "Commencer l'enregistrement",
         "stopConversation": "Arrêter la conversation"
     },
     "status": {
-        "notRecordingMessage": "Posez des questions sur les avantages sociaux des employés de Contoso",
+        "notRecordingMessage": "Posez n’importe quelle question sur les vols Air France KLM ou votre réservation",
         "conversationInProgress": "Conversation en cours"
     },
     "history": {

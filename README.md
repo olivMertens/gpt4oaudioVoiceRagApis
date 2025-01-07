@@ -149,18 +149,34 @@ You can run this app locally using either the Azure services you provisioned by 
    ```
 
    To use Entra ID (your user when running locally, managed identity when deployed) simply don't set the keys.
+3. You have to install the requirements for the frontend and backend:
 
-3. Run this command to start the app:
+   ```shell
+   cd app/api
+   pip install -r requirements.txt
+   cd app/backend
+   pip install -r requirements.txt
+   ```
+
+4. If you have to relaunch the embedding for Ai search, you can run the following command:
+
+   ```shell
+   cd app/backend
+   py setup_intvect.py /* dont forget to modify the path ( in local ) for give the local access data/faq.json change to ../../data/faq.json */
+   ```
+4. Run this command to start the app:
 
    Windows:
 
    ```pwsh
    cd app/api
    uvicorn main:app --host 0.0.0.0 --port 8765
+```
+   ```pwsh
    cd ../../
    pwsh .\scripts\start.ps1
    ```
-
+or
    Linux/Mac:
 
    ```bash
@@ -168,9 +184,8 @@ You can run this app locally using either the Azure services you provisioned by 
    ```
 
    you can verify if the api is running by navigating to [http://localhost:8765/health](http://localhost:8765/health)
-   the app will be available on [http://localhost:8000](http://localhost:8000)
 
-4. The app is available on [http://localhost:8765](http://localhost:8765).
+5. The app is available on [http://localhost:8000](http://localhost:8000).
 
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
    ![app screenshot](docs/talktoyourdataapp.png)

@@ -8,7 +8,7 @@ export default defineConfig({
     build: {
         outDir: "../backend/static",
         emptyOutDir: true,
-        sourcemap: true
+        sourcemap: false
     },
     resolve: {
         alias: {
