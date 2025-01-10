@@ -14,12 +14,24 @@ This repo contains an example of how to implement RAG support in applications th
 * [Deploying the app](#deploying-the-app)
 * [Development server](#development-server)
 
+This demo is customized for Air France / LM customer assistant with some specific data and tools ( like the api for the tools on book flight or informations about false customer ) take a look at the data located in the folder,
+```shell
+app\api\data\load_data.py
+```
+and the FAQ data ( included in french language and embedded / pushed in Ai search during the build ) located in the folder
+```shell 
+data\faq.json
+```
+take a look also at the file located in app\app.py 
+it include the prompt system ( and you can see it is actually limited for english language for the response) and the file ragtools.py that include the tools for the api and access to Ai search.
+
 ## Features
 
 * **Voice interface**: The app uses the browser's microphone to capture voice input, and sends it to the backend where it is processed by the Azure OpenAI GPT-4o Realtime API.
 * **RAG (Retrieval Augmented Generation)**: The app uses the Azure AI Search service to answer questions about a knowledge base, and sends the retrieved documents to the GPT-4o Realtime API to generate a response.
 * **Audio output**: The app plays the response from the GPT-4o Realtime API as audio, using the browser's audio capabilities.
 * **Citations**: The app shows the search results that were used to generate the response.
+* **Apis** : The app will use a container app Api to give some information with the tools
 
 ### Architecture Diagram
 
@@ -119,14 +131,16 @@ The steps below will provision Azure resources and deploy the application code t
     ```
 
 
-1. Run this single command to provision the resources, deploy the code, and setup integrated vectorization for the sample data:
+5. Run this single command to provision the resources, deploy the code, and setup integrated vectorization for the sample data:
 
    ```shell
    azd up
    ````
 
    * **Important**: Beware that the resources created by this command will incur immediate costs, primarily from the AI Search resource. These resources may accrue costs even if you interrupt the command before it is fully executed. You can run `azd down` or delete the resources manually to avoid unnecessary spending.
-   * You will be prompted to select two locations, one for the majority of resources and one for the OpenAI resource, which is currently a short list. That location list is based on the [OpenAI model availability table](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability) and may become outdated as availability changes.
+   * You will be prompted to select two locations, one for the majority of resources and one for the OpenAI resource, which is currently a short list. That location list is based on the [OpenAI model availability table](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability) and may become outdated as availability changes.for some information about quota and region available for the model realtime preview, you can check the [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
+   You can also update the quota for the diffrent model directly in Azure Ai foundry in Deployment and update deployment
+   ![screenshot quota Ai foundry](docs/quotarealtime.png)
 
 1. After the application has been successfully deployed you will see a URL printed to the console.  Navigate to that URL to interact with the app in your browser. To try out the app, click the "Start conversation button", say "Hello", and then ask a question about your data like "What is the whistleblower policy for Contoso electronics?" You can also now run the app locally by following the instructions in [the next section](#development-server).
 
@@ -149,7 +163,7 @@ You can run this app locally using either the Azure services you provisioned by 
    ```
 
    To use Entra ID (your user when running locally, managed identity when deployed) simply don't set the keys.
-3. You have to install the requirements for the frontend and backend:
+3. You have to install the requirements for the api and backend:
 
    ```shell
    cd app/api
@@ -166,29 +180,24 @@ You can run this app locally using either the Azure services you provisioned by 
    ```
 4. Run this command to start the app:
 
-   Windows:
-
+on Windows:
    ```pwsh
    cd app/api
    uvicorn main:app --host 0.0.0.0 --port 8765
-```
-   ```pwsh
-   cd ../../
    pwsh .\scripts\start.ps1
    ```
-or
-   Linux/Mac:
+or for Linux/Mac:
 
    ```bash
    ./scripts/start.sh
    ```
 
-   you can verify if the api is running by navigating to [http://localhost:8765/health](http://localhost:8765/health)
+   you can verify if the apis are running by navigating to [http://localhost:8765/health](http://localhost:8765/health)
 
 5. The app is available on [http://localhost:8000](http://localhost:8000).
 
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
-   ![app screenshot](docs/talktoyourdataapp.png)
+   ![app screenshot](docs/talktoyourdataappairfrance.png)
 
    To try out the app, click the "Start conversation button", say "Hello", and then ask a question about your data like "What is the whistleblower policy for Contoso electronics?"
 
@@ -213,10 +222,6 @@ either by deleting the resource group in the Portal or running `azd down`.
 ### Security
 
 This template uses [Managed Identity](https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview) to eliminate the need for developers to manage these credentials. Applications can use managed identities to obtain Microsoft Entra tokens without having to manage any credentials.To ensure best practices in your repo we recommend anyone creating solutions based on our templates ensure that the [Github secret scanning](https://docs.github.com/code-security/secret-scanning/about-secret-scanning) setting is enabled in your repos.
-
-### Notes
-
->Sample data: The PDF documents used in this demo contain information generated using a language model (Azure OpenAI Service). The information contained in these documents is only for demonstration purposes and does not reflect the opinions or beliefs of Microsoft. Microsoft makes no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the information contained in this document. All rights reserved to Microsoft.
 
 ## Resources
 

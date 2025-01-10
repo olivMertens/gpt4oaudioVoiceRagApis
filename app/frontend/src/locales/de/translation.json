@@ -1,0 +1,21 @@
+{
+    "app": {
+        "title": "Sprechen Sie mit Ihrem Kundenassistenten Air France/ KLM",
+        "footer": "Erstellt mit Azure AI Search + Azure OpenAI + Container Apps",
+        "stopRecording": "Aufnahme stoppen",
+        "startRecording": "Aufnahme starten",
+        "stopConversation": "Gespräch beenden"
+    },
+    "status": {
+        "notRecordingMessage": "Stellen Sie jede beliebige Frage zu Flügen von Air France & KLM oder zu Ihrer Reservierung",
+        "conversationInProgress": "Gespräch läuft"
+    },
+    "history": {
+        "answerHistory": "Antwortverlauf",
+        "noHistory": "Noch kein Verlauf."
+    },
+    "groundingFiles": {
+        "title": "Ankerdateien",
+        "description": "Dateien, die zum Verankern der Antworten verwendet werden."
+    }
+}

@@ -1,21 +1,21 @@
 {
     "app": {
-        "title": "Habla con tus datos",
-        "footer": "Creado con Azure AI Search + Azure OpenAI",
+        "title": "Habla con tu Asistente de Cliente de Air France/KLM",
+        "footer": "Creado con Azure AI Search + Azure OpenAI + Container Apps",
         "stopRecording": "Detener grabación",
-        "startRecording": "Comenzar grabación",
-        "stopConversation": "Detener conversación"
+        "startRecording": "Iniciar grabación",
+        "stopConversation": "Finalizar conversación"
     },
     "status": {
-        "notRecordingMessage": "Pregunta cualquier cosa sobre los beneficios de los empleados de Contoso",
-        "conversationInProgress": "Conversación en progreso"
+        "notRecordingMessage": "Haz cualquier pregunta sobre vuelos de Air France & KLM o sobre tu reserva",
+        "conversationInProgress": "Conversación en curso"
     },
     "history": {
         "answerHistory": "Historial de respuestas",
-        "noHistory": "Aún no hay historial."
+        "noHistory": "Aún sin historial."
     },
     "groundingFiles": {
-        "title": "Archivos de fundamentación",
-        "description": "Archivos utilizados para fundamentar las respuestas."
+        "title": "Archivos de anclaje",
+        "description": "Archivos utilizados para anclar las respuestas."
     }
 }

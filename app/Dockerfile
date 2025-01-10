@@ -14,7 +14,6 @@ FROM python:3.12-slim AS production-stage
 WORKDIR /app
 COPY --from=build-stage /backend/static /app/static
 COPY ./backend/ /app
-COPY ./api /app/api
 COPY ./start.sh /app
  
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -22,5 +21,5 @@ ENV PYTHONUNBUFFERED=1
  
 RUN python -m pip install -r requirements.txt
 EXPOSE 8000
-EXPOSE 8765
-CMD ["./start.sh"]
+EXPOSE 80
+CMD ["gunicorn", "app:create_app", "-b", "0.0.0.0:8000","--worker-class", "aiohttp.GunicornWebWorker"]

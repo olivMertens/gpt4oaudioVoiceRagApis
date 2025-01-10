@@ -177,6 +177,34 @@ module containerApps 'core/host/container-apps.bicep' = {
   }
 }
 
+module acaApi 'core/host/container-app-upsert.bicep' = {
+  name: 'aca-api'
+  scope: resourceGroup
+  dependsOn: [
+    containerApps
+    acaIdentity
+  ]
+  params: {
+    name: 'api-container-app'
+    location: location
+    identityName: acaIdentityName
+    exists: false
+    workloadProfile: azureContainerAppsWorkloadProfile
+    containerRegistryName: containerApps.outputs.registryName
+    containerAppsEnvironmentName: containerApps.outputs.environmentName
+    identityType: 'UserAssigned'
+    tags: union(tags, { 'azd-service-name': 'api' })
+    targetPort: 8765
+    containerCpuCoreCount: '1.0'
+    containerMemory: '2Gi'
+    env: {
+      // CORS support, for frontends on other hosts
+      RUNNING_IN_PRODUCTION: 'true'
+      // For using managed identity to access Azure resources. See
+    }
+  }
+}
+
 // Container Apps for the web application (Python Quart app with JS frontend)
 module acaBackend 'core/host/container-app-upsert.bicep' = {
   name: 'aca-web'
@@ -212,6 +240,7 @@ module acaBackend 'core/host/container-app-upsert.bicep' = {
       AZURE_OPENAI_ENDPOINT: reuseExistingOpenAi ? openAiEndpoint : openAi.outputs.endpoint
       AZURE_OPENAI_REALTIME_DEPLOYMENT: reuseExistingOpenAi ? openAiRealtimeDeployment : openAiDeployments[0].name
       AZURE_OPENAI_REALTIME_VOICE_CHOICE: openAiRealtimeVoiceChoice
+      AZURE_API_ENDPOINT: acaApi.outputs.uri
       // CORS support, for frontends on other hosts
       RUNNING_IN_PRODUCTION: 'true'
       // For using managed identity to access Azure resources. See https://github.com/microsoft/azure-container-apps/issues/442
@@ -219,6 +248,7 @@ module acaBackend 'core/host/container-app-upsert.bicep' = {
     }
   }
 }
+
 
 var embedModel = 'text-embedding-3-large'
 var openAiDeployments = [
