@@ -113,13 +113,13 @@ The steps below will provision Azure resources and deploy the application code t
 2. Run this command to ensure that the [infrastructure](../infra/main.bicep) assigns the proper RBAC roles for accessing the OpenAI resource:
 
     ```bash
-    azd env set AZURE_OPENAI_RESOURCE_GROUP rg-klm
+    azd env set AZURE_OPENAI_RESOURCE_GROUP yourresourcegroupname
     ```
 
 3. Run this command to point the app code at your Azure OpenAI endpoint:
 
     ```bash
-    azd env set AZURE_OPENAI_ENDPOINT https://cog-fbgwp5e2xxwoo.openai.azure.com
+    azd env set AZURE_OPENAI_ENDPOINT https://cog-fbgwp5e2xzeezxwoo.openai.azure.com
     ```
 
 4. Run this command to point the app code at your Azure OpenAI real-time deployment. Note that the deployment name may be different from the model name:
@@ -136,15 +136,24 @@ The steps below will provision Azure resources and deploy the application code t
    ```shell
    azd up
    ````
-
    * **Important**: Beware that the resources created by this command will incur immediate costs, primarily from the AI Search resource. These resources may accrue costs even if you interrupt the command before it is fully executed. You can run `azd down` or delete the resources manually to avoid unnecessary spending.
+   The delete could be long enough to delete the resources, so be patient.
+   * **Important**: the delete for model preview are made in soft delete and stay in the subscription for 30 days, you can delete it manually in the Azure portal in your azure open ai resource, important because the preview are limited in number of deployment and you can't create a new one if you reach the limit.
+
+   ![screenshot soft delete aoai](docs/aoaisoftdelete.png)
    * You will be prompted to select two locations, one for the majority of resources and one for the OpenAI resource, which is currently a short list. That location list is based on the [OpenAI model availability table](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability) and may become outdated as availability changes.for some information about quota and region available for the model realtime preview, you can check the [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
-   You can also update the quota for the diffrent model directly in Azure Ai foundry in Deployment and update deployment
+   * You can also update the quota for the model directly in Azure Ai foundry , the Deployment section and update deployment
    ![screenshot quota Ai foundry](docs/quotarealtime.png)
 
-1. After the application has been successfully deployed you will see a URL printed to the console.  Navigate to that URL to interact with the app in your browser. To try out the app, click the "Start conversation button", say "Hello", and then ask a question about your data like "What is the whistleblower policy for Contoso electronics?" You can also now run the app locally by following the instructions in [the next section](#development-server).
+6. After the application has been successfully deployed you will see a URL printed to the console.  Navigate to that URL to interact with the app in your browser.
+there will be 2 urls one for the api and one for the app
+if you want to test the api click on the url and add /health at the end of the url for see if the api is running
+if you want to test the app click on the url and you will see the start screen of the app
+click the "Start conversation button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?""
 
-## Development server
+You can also now run the app locally by following the instructions in [the next section](#development-server).
+
+## Development local server
 
 You can run this app locally using either the Azure services you provisioned by following the [deployment instructions](#deploying-the-app), or by pointing the local app at already [existing services](docs/existing_services.md).
 
@@ -199,7 +208,7 @@ or for Linux/Mac:
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
    ![app screenshot](docs/talktoyourdataappairfrance.png)
 
-   To try out the app, click the "Start conversation button", say "Hello", and then ask a question about your data like "What is the whistleblower policy for Contoso electronics?"
+   To try out the app, click the "microphone ubtton", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?".
 
 ## Guidance
 
@@ -228,3 +237,4 @@ This template uses [Managed Identity](https://learn.microsoft.com/entra/identity
 * [Blog post: VoiceRAG](https://aka.ms/voicerag)
 * [Demo video: VoiceRAG](https://youtu.be/vXJka8xZ9Ko)
 * [Azure OpenAI Realtime Documentation](https://github.com/Azure-Samples/aoai-realtime-audio-sdk/)
+* [Azure  OpenAI Realtime Documentation Learn](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
