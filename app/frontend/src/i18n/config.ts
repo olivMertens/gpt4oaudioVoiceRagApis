@@ -25,6 +25,10 @@ export const supportedLngs: { [key: string]: { name: string; locale: string } } 
     ja: {
         name: "日本語",
         locale: "ja-JP"
+    },
+    de: {
+        name: "Deutsch",
+        locale: "de-DE"
     }
 };
 
@@ -39,7 +43,8 @@ i18next
             en: { translation: enTranslation },
             es: { translation: esTranslation },
             fr: { translation: frTranslation },
-            ja: { translation: jaTranslation }
+            ja: { translation: jaTranslation },
+            de: { translation: deTranslation }
         },
         fallbackLng: "en",
         supportedLngs: Object.keys(supportedLngs),
