@@ -1,6 +1,6 @@
 {
     "app": {
-        "title": "Parlez à votre Customer Assitant Air France/ KLM",
+        "title": "Parlez à votre assistant Air France/ KLM",
         "footer": "Créée avec Azure AI Search + Azure OpenAI + Container Apps",
         "stopRecording": "Arrêter l'enregistrement",
         "startRecording": "Commencer l'enregistrement",
