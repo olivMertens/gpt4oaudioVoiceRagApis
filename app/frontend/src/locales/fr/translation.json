@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Parlez à votre Air France KLM assistant",
-        "footer": "Créée avec Azure AI Search + Azure OpenAI",
+        "title": "Parlez à votre Customer Assitant Air France/ KLM",
+        "footer": "Créée avec Azure AI Search + Azure OpenAI + Container Apps",
         "stopRecording": "Arrêter l'enregistrement",
         "startRecording": "Commencer l'enregistrement",
         "stopConversation": "Arrêter la conversation"
     },
     "status": {
-        "notRecordingMessage": "Posez n’importe quelle question sur les vols Air France KLM ou votre réservation",
+        "notRecordingMessage": "Posez n’importe quelle question sur les vols Air France & KLM ou sur votre réservation",
         "conversationInProgress": "Conversation en cours"
     },
     "history": {

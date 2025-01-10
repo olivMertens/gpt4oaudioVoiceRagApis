@@ -5,12 +5,16 @@ from aiohttp import web
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import AzureDeveloperCliCredential, DefaultAzureCredential
 from dotenv import load_dotenv
-
 from ragtools import attach_rag_tools
 from rtmt import RTMiddleTier
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voicerag")
+
+
+RUNNING_IN_PRODUCTION = os.getenv("RUNNING_IN_PRODUCTION", "false").lower() == "true"
+HOST = "0.0.0.0" if RUNNING_IN_PRODUCTION else "localhost"
+PORT = 8000
 
 async def create_app():
     if not os.environ.get("RUNNING_IN_PRODUCTION"):
@@ -19,6 +23,9 @@ async def create_app():
 
     llm_key = os.environ.get("AZURE_OPENAI_API_KEY")
     search_key = os.environ.get("AZURE_SEARCH_API_KEY")
+    logger.info("Loading environment variables:")
+    for key, value in os.environ.items():
+        logger.info(f"{key}: {value}")
 
     credential = None
     if not llm_key or not search_key:
@@ -75,7 +82,7 @@ async def create_app():
 
 
 if __name__ == "__main__":
-    host = "localhost"
+    host = HOST
     port = 8000
     app = create_app()
     web.run_app(app, host=host, port=port)

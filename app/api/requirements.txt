@@ -3,3 +3,4 @@ fastapi==0.115.5
 uvicorn==0.18.3
 pydantic==2.10.2
 gunicorn==20.1.0
+python-dotenv==1.0.1

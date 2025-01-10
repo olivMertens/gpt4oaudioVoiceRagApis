@@ -1,21 +1,21 @@
 {
     "app": {
-        "title": "データと話す",
-        "footer": "Azure AI Search + Azure OpenAI で構築",
+        "title": "Air France/KLMのカスタマーアシスタントと話す",
+        "footer": "Azure AI Search + Azure OpenAI + Container Appsで作成",
         "stopRecording": "録音を停止",
         "startRecording": "録音を開始",
-        "stopConversation": "会話を停止"
+        "stopConversation": "会話を終了"
     },
     "status": {
-        "notRecordingMessage": "Contoso 従業員の福利厚生について質問してください",
+        "notRecordingMessage": "Air France & KLMのフライトや予約について、何でも質問してください",
         "conversationInProgress": "会話が進行中"
     },
     "history": {
         "answerHistory": "回答履歴",
-        "noHistory": "まだ履歴はありません。"
+        "noHistory": "履歴がまだありません。"
     },
     "groundingFiles": {
-        "title": "グラウンディング ファイル",
-        "description": "回答をグラウンディングするために使用されるファイル。"
+        "title": "アンカーファイル",
+        "description": "回答をアンカリングするために使用されるファイル。"
     }
 }

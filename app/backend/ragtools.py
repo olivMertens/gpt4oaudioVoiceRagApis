@@ -1,15 +1,23 @@
-import re, httpx
+import re, httpx, os
 from typing import Any
 import logging
 from azure.core.credentials import AzureKeyCredential
 from azure.identity import DefaultAzureCredential
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.models import VectorizableTextQuery
-
+from dotenv import load_dotenv
 from rtmt import RTMiddleTier, Tool, ToolResult, ToolResultDirection
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("toolingCall")
 
+if not os.environ.get("RUNNING_IN_PRODUCTION"):
+    logger.info("Running in development mode, loading from .env file")
+    load_dotenv()
+else:
+    logger.info("Running in production mode")
+
+
+AZURE_API_ENDPOINT = os.environ.get("AZURE_API_ENDPOINT")
 
 _search_tool_schema = {
     "type": "function",
@@ -144,7 +152,7 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
 async def _booking_tool(args: Any) -> ToolResult:
     print(f"Retrieving bookings for flight '{args.get('flight')}' and name '{args.get('name')}'.")
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://localhost:8765/api/bookings", params=args)
+        response = await client.get(AZURE_API_ENDPOINT+"/api/bookings", params=args)
         response.raise_for_status()
         bookings = response.json()
     return ToolResult({"bookings": bookings}, ToolResultDirection.TO_SERVER)
@@ -152,7 +160,7 @@ async def _booking_tool(args: Any) -> ToolResult:
 async def _flight_tool(args: Any) -> ToolResult:
     print(f"Retrieving flights for flight '{args.get('flight')}'.")
     async with httpx.AsyncClient() as client:
-        response = await client.get("http://localhost:8765/api/flights", params=args)
+        response = await client.get(AZURE_API_ENDPOINT+"/api/flights", params=args)
         response.raise_for_status()
         flights = response.json()
     return ToolResult({"flights": flights}, ToolResultDirection.TO_SERVER)

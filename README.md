@@ -119,7 +119,7 @@ The steps below will provision Azure resources and deploy the application code t
     ```
 
 
-1. Run this single command to provision the resources, deploy the code, and setup integrated vectorization for the sample data:
+5. Run this single command to provision the resources, deploy the code, and setup integrated vectorization for the sample data:
 
    ```shell
    azd up
@@ -149,7 +149,7 @@ You can run this app locally using either the Azure services you provisioned by 
    ```
 
    To use Entra ID (your user when running locally, managed identity when deployed) simply don't set the keys.
-3. You have to install the requirements for the frontend and backend:
+3. You have to install the requirements for the api and backend:
 
    ```shell
    cd app/api

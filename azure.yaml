@@ -10,6 +10,12 @@ services:
     host: containerapp
     docker:
       remoteBuild: true
+  api:
+    project: ./app/api
+    language: py
+    host: containerapp
+    docker:
+      remoteBuild: true
 hooks:
     postprovision:
       windows:
