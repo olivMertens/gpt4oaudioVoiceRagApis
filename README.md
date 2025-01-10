@@ -138,7 +138,8 @@ The steps below will provision Azure resources and deploy the application code t
    ````
    * **Important**: Beware that the resources created by this command will incur immediate costs, primarily from the AI Search resource. These resources may accrue costs even if you interrupt the command before it is fully executed. You can run `azd down` or delete the resources manually to avoid unnecessary spending.
    The delete could be long enough to delete the resources, so be patient.
-   * **Important**: the delete for model preview are made in soft delete and stay in the subscription for 30 days, you can delete it manually in the Azure portal in your azure open ai resource, important because the preview are limited in number of deployment and you can't create a new one if you reach the limit.
+   * **Important**: the deletion for model preview are made in soft delete and stay in the subscription for 30 days, you can delete it manually in the Azure portal in your azure open ai resource, important because the preview are limited in number of deployment and you can't create a new one if you reach the limit.
+   instead you could use for hard reset `azd down --purge`
 
    ![screenshot soft delete aoai](docs/aoaisoftdelete.png)
    * You will be prompted to select two locations, one for the majority of resources and one for the OpenAI resource, which is currently a short list. That location list is based on the [OpenAI model availability table](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability) and may become outdated as availability changes.for some information about quota and region available for the model realtime preview, you can check the [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
@@ -149,7 +150,7 @@ The steps below will provision Azure resources and deploy the application code t
 there will be 2 urls one for the api and one for the app
 if you want to test the api click on the url and add /health at the end of the url for see if the api is running
 if you want to test the app click on the url and you will see the start screen of the app
-click the "Start conversation button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?""
+click the "Start conversation button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?" 
 
 You can also now run the app locally by following the instructions in [the next section](#development-server).
 
