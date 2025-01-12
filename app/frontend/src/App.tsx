@@ -13,7 +13,7 @@ import useAudioPlayer from "@/hooks/useAudioPlayer";
 
 import { GroundingFile, ToolResult } from "./types";
 
-import logo from "./assets/af-logo.svg";
+import logo from "./assets/macif.png";
 
 function App() {
     const [isRecording, setIsRecording] = useState(false);
@@ -69,11 +69,11 @@ function App() {
                 <img src={logo} alt="Azure logo" className="h-16" />
             </div>
             <main className="flex flex-grow flex-col items-center justify-center">
-                <h1 className="mb-8 bg-gradient-to-r from-sky-900 to-red-800 bg-clip-text text-4xl font-bold text-transparent md:text-7xl">{t("app.title")}</h1>
+                <h1 className="mb-8 bg-[#0A2D82] bg-clip-text text-4xl font-bold text-transparent md:text-7xl">{t("app.title")}</h1>
                 <div className="mb-4 flex flex-col items-center justify-center">
                     <Button
                         onClick={onToggleListening}
-                        className={`h-12 w-60 ${isRecording ? "bg-red-600 hover:bg-red-700" : "bg-sky-900 hover:bg-sky-900"}`}
+                        className={`h-12 w-60 ${isRecording ? "bg-red-600 hover:bg-red-700" : "bg-[#D2D62E] hover:bg-[#D2D62E]"}`}
                         aria-label={isRecording ? t("app.stopRecording") : t("app.startRecording")}
                     >
                         {isRecording ? (
