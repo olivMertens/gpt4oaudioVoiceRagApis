@@ -119,7 +119,7 @@ var principalType = empty(runningOnGh) && empty(runningOnAdo) ? 'User' : 'Servic
 
 // Organize resources in a resource group
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
+  name: toLower(!empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}')
   location: location
   tags: tags
 }
@@ -185,7 +185,7 @@ module acaApi 'core/host/container-app-upsert.bicep' = {
     acaIdentity
   ]
   params: {
-    name: 'api-container-app'
+    name: apiContainerName
     location: location
     identityName: acaIdentityName
     exists: false

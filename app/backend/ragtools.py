@@ -18,6 +18,7 @@ else:
 
 
 AZURE_API_ENDPOINT = os.environ.get("AZURE_API_ENDPOINT")
+API_CONTAINER_NAME = os.environ.get("API_CONTAINER_NAME")
 
 _search_tool_schema = {
     "type": "function",
