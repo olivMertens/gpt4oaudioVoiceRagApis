@@ -17,6 +17,7 @@
     "openAiServiceLocation": {
       "value": "${AZURE_OPENAI_SERVICE_LOCATION}"
     },
+    
     "openAiServiceName": {
       "value": "${AZURE_OPENAI_SERVICE}"
     },
@@ -33,7 +34,10 @@
       "value": "${AZURE_OPENAI_REALTIME_DEPLOYMENT}"
     },
     "openAiRealtimeVoiceChoice": {
-      "value": "${AZURE_OPENAI_REALTIME_VOICE_CHOICE=alloy}"
+      "value": "${AZURE_OPENAI_REALTIME_VOICE_CHOICE}"
+    },
+    "openAirealtimeModelVersion": {
+      "value": "${AZURE_OPENAI_REALTIME_MODEL_VERSION}"
     },
     "searchIndexName": {
       "value": "${AZURE_SEARCH_INDEX=voicerag-intvect}"

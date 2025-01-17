@@ -73,7 +73,27 @@ param openAiServiceName string = ''
 param openAiResourceGroupName string = ''
 param openAiEndpoint string = ''
 param openAiRealtimeDeployment string = ''
-param openAiRealtimeVoiceChoice string = ''
+
+
+@minLength(1)
+@description('Choice of voice for the OpenAI deployment')
+@allowed([
+  'echo'
+  'alloy'
+  'shimmer'
+  'ash'
+  'ballad'
+  'coral'
+  'sage'
+  'verse'
+])
+@metadata({
+  azd: {
+    type: 'openAiRealtimeVoiceChoice'
+  }
+})
+
+param openAiRealtimeVoiceChoice string
 
 @description('Location for the OpenAI resource group')
 @allowed([
@@ -87,11 +107,23 @@ param openAiRealtimeVoiceChoice string = ''
 })
 param openAiServiceLocation string
 
+
+
+
+@description('Version of the GPT-4 model realtime for OpenAI deployment')
+@allowed([
+  '2024-10-01'
+  '2024-12-17'
+])
+@metadata({
+  azd: {
+    type: 'openAirealtimeModelVersion'
+  }
+})
+param openAirealtimeModelVersion string
 param realtimeDeploymentCapacity int
 param embeddingDeploymentCapacity int
-
 param tenantId string = tenant().tenantId
-
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
 
@@ -257,7 +289,7 @@ var openAiDeployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-4o-realtime-preview'
-      version: '2024-10-01'
+      version: openAirealtimeModelVersion
     }
     sku: {
       name: 'GlobalStandard'
@@ -434,6 +466,7 @@ output AZURE_OPENAI_REALTIME_DEPLOYMENT string = reuseExistingOpenAi
   ? openAiRealtimeDeployment
   : openAiDeployments[0].name
 output AZURE_OPENAI_REALTIME_VOICE_CHOICE string = openAiRealtimeVoiceChoice
+output AZURE_OPENAI_REALTIME_VOICE_MODEL_VERSION string = openAirealtimeModelVersion
 output AZURE_OPENAI_EMBEDDING_DEPLOYMENT string = embedModel
 output AZURE_OPENAI_EMBEDDING_MODEL string = embedModel
 
@@ -447,7 +480,6 @@ output AZURE_SEARCH_CONTENT_FIELD string = searchContentField
 output AZURE_SEARCH_TITLE_FIELD string = searchTitleField
 output AZURE_SEARCH_EMBEDDING_FIELD string = searchEmbeddingField
 output AZURE_SEARCH_USE_VECTOR_QUERY bool = searchUseVectorQuery
-
 output AZURE_STORAGE_ENDPOINT string = 'https://${storage.outputs.name}.blob.core.windows.net'
 output AZURE_STORAGE_ACCOUNT string = storage.outputs.name
 output AZURE_STORAGE_CONNECTION_STRING string = 'ResourceId=/subscriptions/${subscription().subscriptionId}/resourceGroups/${storageResourceGroup.name}/providers/Microsoft.Storage/storageAccounts/${storage.outputs.name}'

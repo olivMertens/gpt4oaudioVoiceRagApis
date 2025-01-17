@@ -8,10 +8,10 @@ If your goal is to reuse existing services (OpenAI or Search), see the [existing
 Run this command to set the voice choice for the real-time deployment:
 
 ```bash
-azd env set AZURE_OPENAI_REALTIME_VOICE_CHOICE <echo, alloy, or shimmer>
+azd env set AZURE_OPENAI_REALTIME_VOICE_CHOICE <echo, alloy, or shimmer> or <echo, alloy, shimmer, ash, ballad, coral, sage, verse> if you use the version 2024-12-17
 ```
 
-The default voice choice is `alloy`, but 2 other voices are available.
+The default voice choice is `alloy`, but 2 other voices are available ( only for the deployment version 2024-12-17): there are 6 voices available: `alloy`, `shimmer`, `ash`, `ballad`, `coral`, `sage`, `verse`.
 
 Once you have set the voice choice, run `azd up` to apply the changes to the deployed app.
 If you've already run `azd up` and want to first preview the voice with the development server, then update your local `.env` file by running `./scripts/write_env.sh` or `pwsh ./scripts/write_env.ps1`, and then restart the development server.
