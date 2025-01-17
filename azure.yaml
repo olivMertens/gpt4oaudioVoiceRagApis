@@ -2,7 +2,7 @@
 
 name: aisearch-openai-rag-audio
 metadata:
-  template: aisearch-openai-rag-audio@0.0.3-beta
+  template: aisearch-openai-rag-audio@0.0.5-beta
 services:
   backend:
     project: ./app
@@ -36,6 +36,8 @@ pipeline:
     - AZURE_OPENAI_ENDPOINT
     - AZURE_OPENAI_REALTIME_DEPLOYMENT
     - AZURE_OPENAI_REALTIME_DEPLOYMENT_CAPACITY
+    - AZURE_OPENAI_REALTIME_VOICE_MODEL_VERSION
+    - AZURE_OPENAI_REALTIME_VOICE_CHOICE
     - AZURE_OPENAI_EMB_DEPLOYMENT_CAPACITY
     - AZURE_OPENAI_EMB_DIMENSIONS
     - AZURE_SEARCH_INDEX
