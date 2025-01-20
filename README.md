@@ -194,8 +194,7 @@ You can run this app locally using either the Azure services you provisioned by 
 
 on Windows:
    ```pwsh
-   cd app/api
-   uvicorn main:app --host 0.0.0.0 --port 8765
+   cd ../../
    pwsh .\scripts\start.ps1
    ```
 or for Linux/Mac:
