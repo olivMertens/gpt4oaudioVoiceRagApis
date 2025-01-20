@@ -63,7 +63,7 @@ _grounding_tool_schema = {
 _booking_tool_schema = {
     "type": "function",
     "name": "get_bookings",
-    "description": "Retrieve booking information for Air France and KLM flights in the bookings api.",
+    "description": "Retrieve booking information for Stu and Ms flights in the bookings api.",
     "parameters": {
         "type": "object",
         "properties": {
@@ -84,7 +84,7 @@ _booking_tool_schema = {
 _flight_tool_schema = {
     "type": "function",
     "name": "get_flights",
-    "description": "Retrieve flight information for Air France and KLM flights in the flight api.",
+    "description": "Retrieve flight information for Stu and Ms flights in the flight api.",
     "parameters": {
         "type": "object",
         "properties": {

@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Air France/KLMのカスタマーアシスタントと話す",
+        "title": "Stu/Msのカスタマーアシスタントと話す",
         "footer": "Azure AI Search + Azure OpenAI + Container Appsで作成",
         "stopRecording": "録音を停止",
         "startRecording": "録音を開始",
         "stopConversation": "会話を終了"
     },
     "status": {
-        "notRecordingMessage": "Air France & KLMのフライトや予約について、何でも質問してください",
+        "notRecordingMessage": "Stu & Msのフライトや予約について、何でも質問してください",
         "conversationInProgress": "会話が進行中"
     },
     "history": {

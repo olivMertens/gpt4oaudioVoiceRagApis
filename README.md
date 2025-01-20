@@ -14,7 +14,7 @@ This repo contains an example of how to implement RAG support in applications th
 * [Deploying the app](#deploying-the-app)
 * [Development server](#development-server)
 
-This demo is customized for Air France / LM customer assistant with some specific data and tools ( like the api for the tools on book flight or informations about false customer ) take a look at the data located in the folder,
+This demo is customized for a  fake company for travels by aircraft named Stu / LM customer assistant with some specific data and tools ( like the api for the tools on book flight or informations about false customer ) take a look at the data located in the folder,
 ```shell
 app\api\data\load_data.py
 ```
@@ -209,7 +209,7 @@ or for Linux/Mac:
 5. The app is available on [http://localhost:8000](http://localhost:8000).
 
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
-   ![app screenshot](docs/talktoyourdataappairfrance.png)
+   ![app screenshot](docs/talktoyourdataapp.png)
 
    To try out the app, click the "microphone ubtton", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?".
 

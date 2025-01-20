@@ -39,7 +39,6 @@ param location string
 
 param backendServiceName string = ''
 param resourceGroupName string = ''
-
 param logAnalyticsName string = ''
 
 param reuseExistingSearch bool
@@ -106,14 +105,10 @@ param openAiRealtimeVoiceChoice string
   }
 })
 param openAiServiceLocation string
-
-
-
-
 @description('Version of the GPT-4 model realtime for OpenAI deployment')
 @allowed([
-  '2024-10-01'
   '2024-12-17'
+  '2024-10-01'
 ])
 @metadata({
   azd: {
@@ -144,14 +139,14 @@ param webAppExists bool
 param azureContainerAppsWorkloadProfile string
 
 param acaIdentityName string = '${environmentName}-aca-identity'
-param containerRegistryName string = '${replace(environmentName, '-', '')}acr'
+param containerRegistryName string = '${replace(toLower(environmentName), '-', '')}acr'
 
 // Figure out if we're running as a user or service principal
 var principalType = empty(runningOnGh) && empty(runningOnAdo) ? 'User' : 'ServicePrincipal'
 
 // Organize resources in a resource group
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
+  name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${toLower(environmentName)}'
   location: location
   tags: tags
 }
@@ -203,7 +198,7 @@ module containerApps 'core/host/container-apps.bicep' = {
     tags: tags
     location: location
     workloadProfile: azureContainerAppsWorkloadProfile
-    containerAppsEnvironmentName: '${environmentName}-aca-env'
+    containerAppsEnvironmentName: '${toLower(environmentName)}-aca-env'
     containerRegistryName: '${containerRegistryName}${resourceToken}'
     logAnalyticsWorkspaceResourceId: logAnalytics.outputs.resourceId
   }
