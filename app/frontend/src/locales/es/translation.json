@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Habla con tu Asistente de Cliente de Air France/KLM",
+        "title": "Habla con tu Asistente de Cliente de Stu/Ms Aircraft",
         "footer": "Creado con Azure AI Search + Azure OpenAI + Container Apps",
         "stopRecording": "Detener grabación",
         "startRecording": "Iniciar grabación",
         "stopConversation": "Finalizar conversación"
     },
     "status": {
-        "notRecordingMessage": "Haz cualquier pregunta sobre vuelos de Air France & KLM o sobre tu reserva",
+        "notRecordingMessage": "Haz cualquier pregunta sobre vuelos de Stu & Ms o sobre tu reserva",
         "conversationInProgress": "Conversación en curso"
     },
     "history": {

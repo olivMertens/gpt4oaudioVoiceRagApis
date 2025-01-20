@@ -33,7 +33,7 @@ async def startup_event():
 
 @app.get("/health")
 async def read_root():
-    return 'hello with Air France and KLM flights'
+    return 'hello with Stu and Ms flights'
 
 @app.get("/api/bookings")
 async def get_bookings(flight: Optional[str] = None, name: Optional[str] = None):
