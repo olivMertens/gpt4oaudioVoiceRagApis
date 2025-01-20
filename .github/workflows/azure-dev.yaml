@@ -33,6 +33,8 @@ jobs:
       AZURE_OPENAI_REUSE_EXISTING: ${{ vars.AZURE_OPENAI_REUSE_EXISTING }}
       AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_ENDPOINT }}
       AZURE_OPENAI_REALTIME_DEPLOYMENT: ${{ vars.AZURE_OPENAI_REALTIME_DEPLOYMENT }}
+      AZURE_OPENAI_REALTIME_VOICE_CHOICE: ${{ vars.AZURE_OPENAI_REALTIME_VOICE_CHOICE }}
+      AZURE_OPENAI_REALTIME_MODEL_VERSION: ${{ vars.AZURE_OPENAI_REALTIME_MODEL_VERSION }}
       AZURE_OPENAI_REALTIME_DEPLOYMENT_CAPACITY: ${{ vars.AZURE_OPENAI_REALTIME_DEPLOYMENT_CAPACITY }}
       AZURE_OPENAI_EMB_DEPLOYMENT_CAPACITY: ${{ vars.AZURE_OPENAI_EMB_DEPLOYMENT_CAPACITY }}
       AZURE_OPENAI_EMB_DIMENSIONS: ${{ vars.AZURE_OPENAI_EMB_DIMENSIONS }}
@@ -76,7 +78,9 @@ jobs:
             --federated-credential-provider "github" `
             --tenant-id "$Env:AZURE_TENANT_ID"
         shell: pwsh
-
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       - name: Provision Infrastructure
         run: azd provision --no-prompt
         env:
