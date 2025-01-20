@@ -210,7 +210,7 @@ or for Linux/Mac:
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
    ![app screenshot](docs/talktoyourdataapp.png)
 
-   To try out the app, click the "microphone ubtton", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?".
+   To try out the app, click the "microphone button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?".
 
 ## Guidance
 
