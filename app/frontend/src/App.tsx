@@ -66,7 +66,7 @@ function App() {
     return (
         <div className="flex min-h-screen flex-col bg-gray-100 text-gray-900">
             <div className="p-4 sm:absolute sm:left-4 sm:top-4">
-                <img src={logo} alt="Azure logo" className="h-16" />
+                <img src={logo} alt="Logo Stu aircraft" className="h-28" />
             </div>
             <main className="flex flex-grow flex-col items-center justify-center">
                 <h1 className="mb-8 bg-gradient-to-r from-sky-900 to-red-800 bg-clip-text text-4xl font-bold text-transparent md:text-7xl">{t("app.title")}</h1>
