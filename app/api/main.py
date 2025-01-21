@@ -23,6 +23,9 @@ class BookingUpdateRequest(BaseModel):
     phone: str
     options: BookingOptions
 
+class VoiceChoice(BaseModel):
+    voice: str
+
 app = FastAPI()
 
 @app.on_event("startup")
@@ -71,6 +74,21 @@ async def get_flight_by_id(flight_id: str):
     if not flight:
         raise HTTPException(status_code=404, detail="Flight not found")
     return {"flight": flight}
+
+@app.get("/api/voice")
+async def get_voice_choice():
+    voice_choice = os.environ.get("AZURE_OPENAI_REALTIME_VOICE_CHOICE", "alloy")
+    return {"voice": voice_choice}
+
+@app.post("/api/voice")
+async def update_voice_choice(voice_choice: VoiceChoice):
+    os.environ["AZURE_OPENAI_REALTIME_VOICE_CHOICE"] = voice_choice.voice
+    return {"voice": voice_choice.voice}
+
+@app.get("/api/available-voices")
+async def get_available_voices():
+    available_voices = ["echo", "alloy", "shimmer", "ash", "ballad", "coral", "sage", "verse"]
+    return {"voices": available_voices}
 
 if __name__ == "__main__":
     import uvicorn
