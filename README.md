@@ -68,13 +68,16 @@ You can run the project in your local VS Code Dev Container using the [Dev Conta
 1. Install the required tools:
    * [Azure Developer CLI](https://aka.ms/azure-dev/install)
    * [Node.js](https://nodejs.org/)
+   * [NPM](https://www.npmjs.com/)
+   * [Docker](https://www.docker.com/products/docker-desktop)
+   * [Dev tools C++](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
    * [Python >=3.11](https://www.python.org/downloads/)
       * **Important**: Python and the pip package manager must be in the path in Windows for the setup scripts to work.
       * **Important**: Ensure you can run `python --version` from console. On Ubuntu, you might need to run `sudo apt install python-is-python3` to link `python` to `python3`.
    * [Git](https://git-scm.com/downloads)
    * [Powershell](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) - For Windows users only.
 
-2. Clone the repo (`git clone https://github.com/Azure-Samples/aisearch-openai-rag-audio`)
+2. Clone the repo (`git clone https://github.com/olivMertens/gpt4oaudioVoiceRagApis.git`)
 3. Proceed to the next section to [deploy the app](#deploying-the-app).
 
 ## Deploying the app
@@ -139,7 +142,7 @@ The steps below will provision Azure resources and deploy the application code t
    * **Important**: Beware that the resources created by this command will incur immediate costs, primarily from the AI Search resource. These resources may accrue costs even if you interrupt the command before it is fully executed. You can run `azd down` or delete the resources manually to avoid unnecessary spending.
    The delete could be long enough to delete the resources, so be patient.
    * **Important**: the deletion for model preview are made in soft delete and stay in the subscription for 30 days, you can delete it manually in the Azure portal in your azure open ai resource, important because the preview are limited in number of deployment and you can't create a new one if you reach the limit.
-   instead you could use for hard reset `azd down --purge`
+   Instead you could use the hard reset command `azd down --purge`
 
    ![screenshot soft delete aoai](docs/aoaisoftdelete.png)
    * You will be prompted to select two locations, one for the majority of resources and one for the OpenAI resource, which is currently a short list. That location list is based on the [OpenAI model availability table](https://learn.microsoft.com/azure/ai-services/openai/concepts/models#global-standard-model-availability) and may become outdated as availability changes.for some information about quota and region available for the model realtime preview, you can check the [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
@@ -150,7 +153,7 @@ The steps below will provision Azure resources and deploy the application code t
 there will be 2 urls one for the api and one for the app
 if you want to test the api click on the url and add /health at the end of the url for see if the api is running
 if you want to test the app click on the url and you will see the start screen of the app
-click the "Start conversation button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?" 
+click the "Start conversation button", say "Hello", and then ask a question about your data like "what is the status of the flight STU1234?" 
 
 You can also now run the app locally by following the instructions in [the next section](#development-server).
 
@@ -165,7 +168,7 @@ You can run this app locally using either the Azure services you provisioned by 
    ```shell
    AZURE_OPENAI_ENDPOINT=wss://<your instance name>.openai.azure.com
    AZURE_OPENAI_REALTIME_DEPLOYMENT=gpt-4o-realtime-preview
-   AZURE_OPENAI_REALTIME_VOICE_MODEL_VERSION="2024-10-01" or "2024-12-17"
+   AZURE_OPENAI_REALTIME_VOICE_MODEL_VERSION="2024-10-01" or "2024-12-17" **for the version 2024-12-17 you have to set the choice of voice in the next variable and caching take a look at this link **
    AZURE_OPENAI_REALTIME_VOICE_API_VERSION="2024-10-01-preview"
    AZURE_OPENAI_REALTIME_VOICE_CHOICE=<choose one: echo, alloy, shimmer> or <echo, alloy, shimmer, ash, ballad, coral, sage, verse> if you use the version 2024-12-17
    AZURE_OPENAI_API_KEY=<your api key>
@@ -208,9 +211,9 @@ or for Linux/Mac:
 5. The app is available on [http://localhost:8000](http://localhost:8000).
 
    Once the app is running, when you navigate to the URL above you should see the start screen of the app:
-   ![app screenshot](docs/talktoyourdataapp.png)
+   ![app screenshot](docs/talkwithstuaircraftassistant.png)
 
-   To try out the app, click the "microphone button", say "Hello", and then ask a question about your data like "what is the status of the flight AF1234?".
+   To try out the app, click the "microphone button", say "Hello", and then ask a question about your data like "what is the status of the flight STU1234?".
 
 ## Guidance
 
@@ -240,3 +243,4 @@ This template uses [Managed Identity](https://learn.microsoft.com/entra/identity
 * [Demo video: VoiceRAG](https://youtu.be/vXJka8xZ9Ko)
 * [Azure OpenAI Realtime Documentation](https://github.com/Azure-Samples/aoai-realtime-audio-sdk/)
 * [Azure  OpenAI Realtime Documentation Learn](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/realtime-audio)
+* [Azure Open Ai realtime model 2024-12-17](https://learn.microsoft.com/en-us/azure/ai-services/openai/whats-new#gpt-4o-realtime-api-2024-12-17)
