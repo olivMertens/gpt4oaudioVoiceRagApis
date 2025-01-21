@@ -11,7 +11,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({ selectedVoice, onVoiceCha
     useEffect(() => {
         const fetchAvailableVoices = async () => {
             try {
-                const response = await fetch("/api/available-voices");
+                const response = await fetch(`${import.meta.env.VITE_AZURE_API_ENDPOINT}/api/available-voices`);
                 const data = await response.json();
                 setAvailableVoices(data.voices);
             } catch (error) {
@@ -27,7 +27,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({ selectedVoice, onVoiceCha
         onVoiceChange(newVoice);
 
         try {
-            const response = await fetch("/api/voice", {
+            const response = await fetch(`${import.meta.env.VITE_AZURE_API_ENDPOINT}/api/voice`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -47,7 +47,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({ selectedVoice, onVoiceCha
         <div>
             <label htmlFor="voice-selector">Select Voice:</label>
             <select id="voice-selector" value={selectedVoice} onChange={handleVoiceChange}>
-                {availableVoices.map((voice) => (
+                {availableVoices.map(voice => (
                     <option key={voice} value={voice}>
                         {voice}
                     </option>
