@@ -105,17 +105,18 @@ param openAiRealtimeVoiceChoice string
   }
 })
 param openAiServiceLocation string
-@description('Version of the GPT-4 model realtime for OpenAI deployment')
+
+@description('Type of the model gpt4O realtime preview')
 @allowed([
-  '2024-12-17'
-  '2024-10-01'
-])
+    'gpt-4o-mini-realtime-preview'
+    'gpt-4o-realtime-preview'
+  ])
 @metadata({
-  azd: {
-    type: 'openAirealtimeModelVersion'
-  }
-})
-param openAirealtimeModelVersion string
+    azd: {
+      type: 'modelType'
+    }
+  }) 
+param modelType string
 param realtimeDeploymentCapacity int
 param embeddingDeploymentCapacity int
 param tenantId string = tenant().tenantId
@@ -280,11 +281,11 @@ module acaBackend 'core/host/container-app-upsert.bicep' = {
 var embedModel = 'text-embedding-3-large'
 var openAiDeployments = [
   {
-    name: 'gpt-4o-realtime-preview'
+    name: modelType
     model: {
       format: 'OpenAI'
-      name: 'gpt-4o-realtime-preview'
-      version: openAirealtimeModelVersion
+      name: modelType
+      version: '2024-12-17'
     }
     sku: {
       name: 'GlobalStandard'
@@ -304,7 +305,6 @@ var openAiDeployments = [
     }
   }
 ]
-
 module openAi 'br/public:avm/res/cognitive-services/account:0.8.0' = if (!reuseExistingOpenAi) {
   name: 'openai'
   scope: openAiResourceGroup
@@ -461,7 +461,6 @@ output AZURE_OPENAI_REALTIME_DEPLOYMENT string = reuseExistingOpenAi
   ? openAiRealtimeDeployment
   : openAiDeployments[0].name
 output AZURE_OPENAI_REALTIME_VOICE_CHOICE string = openAiRealtimeVoiceChoice
-output AZURE_OPENAI_REALTIME_VOICE_MODEL_VERSION string = openAirealtimeModelVersion
 output AZURE_OPENAI_EMBEDDING_DEPLOYMENT string = embedModel
 output AZURE_OPENAI_EMBEDDING_MODEL string = embedModel
 
