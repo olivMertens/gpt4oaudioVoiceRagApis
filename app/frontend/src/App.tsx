@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Mic, MicOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { GroundingFiles } from "@/components/ui/grounding-files";
 import GroundingFileView from "@/components/ui/grounding-file-view";
 import StatusMessage from "@/components/ui/status-message";
+import VoiceSelector from "@/components/ui/voice-selector";
 
 import useRealTime from "@/hooks/useRealtime";
 import useAudioRecorder from "@/hooks/useAudioRecorder";
@@ -19,6 +20,7 @@ function App() {
     const [isRecording, setIsRecording] = useState(false);
     const [groundingFiles, setGroundingFiles] = useState<GroundingFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<GroundingFile | null>(null);
+    const [selectedVoice, setSelectedVoice] = useState<string>("");
 
     const { startSession, addUserAudio, inputAudioBufferClear } = useRealTime({
         onWebSocketOpen: () => console.log("WebSocket connection opened"),
@@ -44,6 +46,20 @@ function App() {
 
     const { reset: resetAudioPlayer, play: playAudio, stop: stopAudioPlayer } = useAudioPlayer();
     const { start: startAudioRecording, stop: stopAudioRecording } = useAudioRecorder({ onAudioRecorded: addUserAudio });
+
+    useEffect(() => {
+        const fetchVoiceChoice = async () => {
+            try {
+                const response = await fetch("/api/voice");
+                const data = await response.json();
+                setSelectedVoice(data.voice);
+            } catch (error) {
+                console.error("Failed to fetch voice choice:", error);
+            }
+        };
+
+        fetchVoiceChoice();
+    }, []);
 
     const onToggleListening = async () => {
         if (!isRecording) {
@@ -90,6 +106,9 @@ function App() {
                     <StatusMessage isRecording={isRecording} />
                 </div>
                 <GroundingFiles files={groundingFiles} onSelected={setSelectedFile} />
+                <div className="mt-4">
+                    <VoiceSelector selectedVoice={selectedVoice} onVoiceChange={setSelectedVoice} />
+                </div>
             </main>
 
             <footer className="py-4 text-center">
