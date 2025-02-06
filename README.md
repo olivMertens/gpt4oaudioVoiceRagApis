@@ -14,7 +14,8 @@ This repo contains an example of how to implement RAG support in applications th
 * [Deploying the app](#deploying-the-app)
 * [Development server](#development-server)
 
-This demo is customized for a  fake company for travels by aircraft named Stu / LM customer assistant with some specific data and tools ( like the api for the tools on book flight or informations about false customer ) take a look at the data located in the folder,
+This demo is customized for a fake company travels with aircraft named STU / MS customer assistant with some specific data and tools ( apis for the tools on booking flight or informations about customer )
+take a look at the data located in the folder on these files
 ```shell
 app\api\data\load_data.py
 ```
@@ -128,7 +129,7 @@ The steps below will provision Azure resources and deploy the application code t
 4. Run this command to point the app code at your Azure OpenAI real-time deployment. Note that the deployment name may be different from the model name:
 
     ```bash
-    azd env set AZURE_OPENAI_REALTIME_DEPLOYMENT gpt-4o-realtime-preview
+    azd env set AZURE_OPENAI_REALTIME_DEPLOYMENT gpt-4o-realtime-preview or gpt-4o-mini-realtime-preview
     azd env set AZURE_OPENAI_EMBEDDING_MODEL text-embedding-3-large
     
     ```
@@ -167,7 +168,7 @@ You can run this app locally using either the Azure services you provisioned by 
 
    ```shell
    AZURE_OPENAI_ENDPOINT=wss://<your instance name>.openai.azure.com
-   AZURE_OPENAI_REALTIME_DEPLOYMENT=gpt-4o-realtime-preview
+   AZURE_OPENAI_REALTIME_DEPLOYMENT=gpt-4o-realtime-preview // gpt-4o-mini-realtime-preview
    AZURE_OPENAI_REALTIME_VOICE_API_VERSION="2024-10-01-preview"
    AZURE_OPENAI_REALTIME_VOICE_CHOICE=<choose one: echo, alloy, shimmer, ash, ballad, coral, sage, verse>
    AZURE_OPENAI_API_KEY=<your api key>
