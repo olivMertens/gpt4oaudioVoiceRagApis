@@ -68,7 +68,7 @@ _incident_tool_schema = {
         "type": "object",
         "properties": {
             "id": {
-                "type": "string",
+                "type": "integer",
                 "description": "incident ID"
             },
             "name": {
