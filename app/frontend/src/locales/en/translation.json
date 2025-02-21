@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Talk to your Stu Ms Aircraft assistant ",
-        "footer": "Built with Azure AI Search + Azure OpenAI",
+        "title": "Talk to your Orange assistant ",
+        "footer": "Built with Azure AI Search +  Azure OpenAI + Container Apps",
         "stopRecording": "Stop recording",
         "startRecording": "Start recording",
         "stopConversation": "Stop conversation"
     },
     "status": {
-        "notRecordingMessage": "Ask anything about Stu Ms flights or menus, or book a flight",
+        "notRecordingMessage": "Ask anything about your Orange assistant.",
         "conversationInProgress": "Conversation in progress"
     },
     "history": {

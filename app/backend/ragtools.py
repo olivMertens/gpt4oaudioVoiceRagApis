@@ -60,16 +60,16 @@ _grounding_tool_schema = {
     }
 }
 
-_booking_tool_schema = {
+_incident_tool_schema = {
     "type": "function",
-    "name": "get_bookings",
-    "description": "Retrieve booking information for Stu and Ms flights in the bookings api.",
+    "name": "incident_tool",
+    "description": "Retrieve incidents information for orange customers pro from api.",
     "parameters": {
         "type": "object",
         "properties": {
-            "flight": {
+            "id": {
                 "type": "string",
-                "description": "Flight ID"
+                "description": "incident ID"
             },
             "name": {
                 "type": "string",
@@ -81,19 +81,20 @@ _booking_tool_schema = {
     }
 }
 
-_flight_tool_schema = {
-    "type": "function",
-    "name": "get_flights",
-    "description": "Retrieve flight information for Stu and Ms flights in the flight api.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "flight": {
-                "type": "string",
-                "description": "Flight ID"
+
+_friendly_tool_schema = {
+    'type': 'function',
+    'name': 'friendly_tool',
+    "description": 'Friendly tool to add some nice joke and say something nice about Alexandra',
+    'parameters': {
+        'type': 'object',
+        'properties': {
+            'name': {
+                'type': 'string',
+                'description': 'The name of the person to greet'
             }
         },
-        "required": [],
+        'required': ['name'],
         "additionalProperties": False
     }
 }
@@ -149,21 +150,28 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
         docs.append({"chunk_id": r[identifier_field], "title": r[title_field], "chunk": r[content_field]})
     return ToolResult({"sources": docs}, ToolResultDirection.TO_CLIENT)
 
-async def _booking_tool(args: Any) -> ToolResult:
-    print(f"Retrieving bookings for flight '{args.get('flight')}' and name '{args.get('name')}'.")
+async def _incident_tool(args: Any) -> ToolResult:
+    print(f"Retrieving incident for customer orange '{args.get('id')}' and name '{args.get('name')}'.")
     async with httpx.AsyncClient() as client:
-        response = await client.get(AZURE_API_ENDPOINT+"/api/bookings", params=args)
+        response = await client.get(AZURE_API_ENDPOINT+"/api/incidents", params=args)
         response.raise_for_status()
-        bookings = response.json()
-    return ToolResult({"bookings": bookings}, ToolResultDirection.TO_SERVER)
+        incidents = response.json()
+    return ToolResult({"incidents": incidents}, ToolResultDirection.TO_SERVER)
 
-async def _flight_tool(args: Any) -> ToolResult:
-    print(f"Retrieving flights for flight '{args.get('flight')}'.")
+async def _friendly_tool(args: Any) -> ToolResult:
+    print(f"Friendly tool called with name '{args.get('name')}'.")
     async with httpx.AsyncClient() as client:
-        response = await client.get(AZURE_API_ENDPOINT+"/api/flights", params=args)
+        response = await client.get("https://official-joke-api.appspot.com/jokes/general/random")
         response.raise_for_status()
-        flights = response.json()
-    return ToolResult({"flights": flights}, ToolResultDirection.TO_SERVER)
+        jokes = response.json()
+        if jokes and isinstance(jokes, list):
+            joke = jokes[0]
+            joke_message = f"{joke.get('setup')} ... {joke.get('punchline')}"
+        else:
+            joke_message = "No joke found."
+    message = f"{args.get('name')}! Alexandra is doing great, thank you for asking! Here's a joke for you: {joke_message}"
+    return ToolResult({"message": message}, ToolResultDirection.TO_SERVER)
+
 
 def attach_rag_tools(rtmt: RTMiddleTier,
     credentials: AzureKeyCredential | DefaultAzureCredential,
@@ -181,9 +189,7 @@ def attach_rag_tools(rtmt: RTMiddleTier,
     logger.info("Attaching Rag tool")
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
-    
-    logger.info("Attaching booking tool")
-    rtmt.tools["get_bookings"] = Tool(schema=_booking_tool_schema, target=lambda args: _booking_tool(args))
-
-    logger.info("Attaching flight tool")
-    rtmt.tools["get_flights"] = Tool(schema=_flight_tool_schema, target=lambda args: _flight_tool(args))
+    logging.info("Attaching friendly tool")
+    rtmt.tools["friendly_tool"] = Tool(schema=_friendly_tool_schema, target=lambda args: _friendly_tool(args))
+    logger.info("Attaching incidents tool")
+    rtmt.tools["incident_tool"] = Tool(schema=_incident_tool_schema, target=lambda args: _incident_tool(args))

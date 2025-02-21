@@ -1,31 +1,103 @@
-def get_bookings_data():
+def get_incidents_data():
     return [
-    {"id": 1, "name": "John Doe", "flight": "STU1234", "brand": "Stu", "cost": 500, "currency": "USD", "phone": "+1-202-555-0173", "options": {"luggage": "20kg", "meals": "standard", "delay": "on time"}, "skyid": "SKY12345", "status": "gold"},
-    {"id": 2, "name": "Jane Smith", "flight": "MS5678", "brand": "MS", "cost": 450, "currency": "GBP", "phone": "+44-20-7946-0958", "options": {"luggage": "15kg", "meals": "vegetarian", "delay": "10 mins"}, "skyid": "SKY23456", "status": "silver"},
-    {"id": 3, "name": "Carlos Mendez", "flight": "STU2345", "brand": "Stu", "cost": 600, "currency": "EUR", "phone": "+34-91-123-4567", "options": {"luggage": "25kg", "meals": "standard", "delay": "on time"}, "skyid": "SKY34567", "status": "nonee"},
-    {"id": 4, "name": "Yuki Tanaka", "flight": "MS6789", "brand": "MS", "cost": 550, "currency": "JPY", "phone": "+81-3-1234-5678", "options": {"luggage": "20kg", "meals": "vegan", "delay": "5 mins"}, "skyid": "SKY45678", "status": "gold"},
-    {"id": 5, "name": "Liu Wei", "flight": "STU3456", "brand": "Stu", "cost": 700, "currency": "CNY", "phone": "+86-10-1234-5678", "options": {"luggage": "30kg", "meals": "standard", "delay": "on time"}, "skyid": "SKY56789", "status": "silver"},
-    {"id": 6, "name": "Fatima Al-Farsi", "flight": "MS7890", "brand": "MS", "cost": 480, "currency": "AED", "phone": "+971-4-123-4567", "options": {"luggage": "18kg", "meals": "halal", "delay": "15 mins"}, "skyid": "SKY67890", "status": "none"},
-    {"id": 7, "name": "Olga Ivanova", "flight": "STU4567", "brand": "Stu", "cost": 620, "currency": "RUB", "phone": "+7-495-123-4567", "options": {"luggage": "22kg", "meals": "standard", "delay": "on time"}, "skyid": "SKY78901", "status": "gold"},
-    {"id": 8, "name": "Mohammed Khan", "flight": "MS8901", "brand": "MS", "cost": 530, "currency": "INR", "phone": "+91-11-1234-5678", "options": {"luggage": "20kg", "meals": "halal", "delay": "10 mins"}, "skyid": "SKY89012", "status": "silver"},
-    {"id": 9, "name": "Anna Müller", "flight": "STU5678", "brand": "Stu", "cost": 580, "currency": "EUR", "phone": "+49-30-1234-5678", "options": {"luggage": "25kg", "meals": "standard", "delay": "on time"}, "skyid": "SKY90123", "status": "none"},
-    {"id": 10, "name": "Santiago Lopez", "flight": "MS9012", "brand": "MS", "cost": 490, "currency": "EUR", "phone": "+34-91-765-4321", "options": {"luggage": "15kg", "meals": "vegetarian", "delay": "5 mins"}, "skyid": "SKY01234", "status": "gold"},
-    {"id": 11, "name": "Aisha Ahmed", "flight": "STU6789", "brand": "Stu", "cost": 650, "currency": "EGP", "phone": "+20-2-1234-5678", "options": {"luggage": "28kg", "meals": "halal", "delay": "on time"}, "skyid": "SKY12345", "status": "silver"},
-    {"id": 12, "name": "Nina Petrova", "flight": "MS0123", "brand": "MS", "cost": 520, "currency": "RUB", "phone": "+7-812-123-4567", "options": {"luggage": "20kg", "meals": "vegan", "delay": "10 mins"}, "skyid": "SKY23456", "status": "none"}
-    ]
-
-def get_flights_data():
-    return [
-        {"id": "STU1234", "destination": "CDG", "departure": "JFK", "brand": "Stu", "weather": {"departure": {"condition": "Sunny", "temperature": "25°C"}, "arrival": {"condition": "Cloudy", "temperature": "18°C"}}, "context": "International flight from New York to Paris"},
-        {"id": "MS5678", "destination": "AMS", "departure": "LHR", "brand": "MS", "weather": {"departure": {"condition": "Rainy", "temperature": "15°C"}, "arrival": {"condition": "Sunny", "temperature": "20°C"}}, "context": "International flight from London to Amsterdam"},
-        {"id": "STU2345", "destination": "CDG", "departure": "LAX", "brand": "Stu", "weather": {"departure": {"condition": "Sunny", "temperature": "28°C"}, "arrival": {"condition": "Foggy", "temperature": "16°C"}}, "context": "International flight from Los Angeles to Paris"},
-        {"id": "MS6789", "destination": "AMS", "departure": "NRT", "brand": "MS", "weather": {"departure": {"condition": "Clear", "temperature": "22°C"}, "arrival": {"condition": "Rainy", "temperature": "17°C"}}, "context": "International flight from Tokyo to Amsterdam"},
-        {"id": "STU3456", "destination": "CDG", "departure": "PEK", "brand": "Stu", "weather": {"departure": {"condition": "Smoggy", "temperature": "30°C"}, "arrival": {"condition": "Sunny", "temperature": "24°C"}}, "context": "International flight from Beijing to Paris"},
-        {"id": "MS7890", "destination": "AMS", "departure": "DXB", "brand": "MS", "weather": {"departure": {"condition": "Hot", "temperature": "35°C"}, "arrival": {"condition": "Cool", "temperature": "20°C"}}, "context": "International flight from Dubai to Amsterdam"},
-        {"id": "STU4567", "destination": "CDG", "departure": "SVO", "brand": "Stu", "weather": {"departure": {"condition": "Snowy", "temperature": "-5°C"}, "arrival": {"condition": "Clear", "temperature": "10°C"}}, "context": "International flight from Moscow to Paris"},
-        {"id": "MS8901", "destination": "AMS", "departure": "DEL", "brand": "MS", "weather": {"departure": {"condition": "Hot", "temperature": "40°C"}, "arrival": {"condition": "Rainy", "temperature": "18°C"}}, "context": "International flight from Delhi to Amsterdam"},
-        {"id": "STU5678", "destination": "CDG", "departure": "FRA", "brand": "Stu", "weather": {"departure": {"condition": "Cloudy", "temperature": "20°C"}, "arrival": {"condition": "Sunny", "temperature": "22°C"}}, "context": "International flight from Frankfurt to Paris"},
-        {"id": "MS9012", "destination": "AMS", "departure": "MAD", "brand": "MS", "weather": {"departure": {"condition": "Sunny", "temperature": "30°C"}, "arrival": {"condition": "Clear", "temperature": "25°C"}}, "context": "International flight from Madrid to Amsterdam"},
-        {"id": "STU6789", "destination": "CDG", "departure": "CAI", "brand": "Stu", "weather": {"departure": {"condition": "Hot", "temperature": "35°C"}, "arrival": {"condition": "Cool", "temperature": "20°C"}}, "context": "International flight from Cairo to Paris"},
-        {"id": "MS0123", "destination": "AMS", "departure": "LED", "brand": "MS", "weather": {"departure": {"condition": "Cold", "temperature": "-10°C"}, "arrival": {"condition": "Clear", "temperature": "15°C"}}, "context": "International flight from St. Petersburg to Amsterdam"}
+        {
+            "id": 1,
+            "incident_id": "INC1001",
+            "title": "Connexion impossible à mon compte",
+            "description": "L'utilisateur ne parvient pas à se connecter malgré plusieurs tentatives. Vérifiez le serveur d'authentification ou réinitialisez votre mot de passe.",
+            "status": "open",
+            "severity": "critical",
+            "faq": "FAQ: Problème de connexion - Assurez-vous que vos identifiants sont corrects et essayez de réinitialiser votre mot de passe si nécessaire.",
+            "name": "Jean Leclerc"
+        },
+        {
+            "id": 2,
+            "incident_id": "INC1002",
+            "title": "Problema de acceso a la cuenta",
+            "description": "El usuario experimenta dificultades al iniciar sesión. Se recomienda revisar la configuración de seguridad y posibles bloqueos temporales.",
+            "status": "in-progress",
+            "severity": "high",
+            "faq": "FAQ: Problema de acceso - Verifica tu contraseña y comprueba que tu cuenta no esté bloqueada temporalmente.",
+            "name": "Carlos García"
+        },
+        {
+            "id": 3,
+            "incident_id": "INC1003",
+            "title": "Erreur lors de la réinitialisation du mot de passe",
+            "description": "L'email de réinitialisation du mot de passe n'est pas reçu. Vérifiez votre dossier spam et l'exactitude de votre adresse email.",
+            "status": "resolved",
+            "severity": "medium",
+            "faq": "FAQ: Réinitialisation de mot de passe - Consultez vos spams et assurez-vous que votre adresse email est bien enregistrée.",
+            "name": "Élodie Dupont"
+        },
+        {
+            "id": 4,
+            "incident_id": "INC1004",
+            "title": "Fallo en el pago en línea",
+            "description": "El usuario informa que la transacción fue rechazada sin motivo aparente. Revisar los datos de pago y la conexión con el banco es recomendable.",
+            "status": "open",
+            "severity": "critical",
+            "faq": "FAQ: Error en el pago - Verifica los detalles de tu tarjeta y confirma que tu banco no haya bloqueado la transacción.",
+            "name": "María Fernández"
+        },
+        {
+            "id": 5,
+            "incident_id": "INC1005",
+            "title": "Problème de synchronisation des notifications",
+            "description": "Les notifications arrivent avec du retard, ce qui affecte la réactivité des utilisateurs. Vérifiez la connexion internet et la configuration de l'application.",
+            "status": "investigating",
+            "severity": "low",
+            "faq": "FAQ: Retard de notifications - Assurez-vous d'une bonne connexion et mettez à jour l'application pour une synchronisation optimale.",
+            "name": "Lucie Martin"
+        },
+        {
+            "id": 6,
+            "incident_id": "INC1006",
+            "title": "Fehler bei der Aktualisierung des Benutzerprofils",
+            "description": "Der Benutzer meldet, dass die aktualisierten Kontodaten nicht gespeichert werden. Überprüfen Sie die Serververbindung und stellen Sie sicher, dass alle erforderlichen Felder korrekt ausgefüllt sind.",
+            "status": "open",
+            "severity": "critical",
+            "faq": "FAQ: Kontoverwaltung - Überprüfen Sie Ihre Eingaben und stellen Sie sicher, dass alle Felder korrekt ausgefüllt sind.",
+            "name": "Lukas Müller"
+        },
+        {
+            "id": 7,
+            "incident_id": "INC1007",
+            "title": "Two-Factor Authentication Failure",
+            "description": "The user is not receiving the authentication code required to complete the login process. Verify the registered phone number and ensure the authentication service is online.",
+            "status": "open",
+            "severity": "high",
+            "faq": "FAQ: Two-Factor Authentication - Verify your phone number and check if the authentication service is operational.",
+            "name": "Oliver Smith"
+        },
+        {
+            "id": 8,
+            "incident_id": "INC1008",
+            "title": "Systemaktualisierung fehlgeschlagen",
+            "description": "Der Benutzer konnte das Systemupdate nicht abschließen. Prüfen Sie die Internetverbindung und stellen Sie sicher, dass genügend Speicherplatz vorhanden ist.",
+            "status": "in-progress",
+            "severity": "medium",
+            "faq": "FAQ: Systemupdate - Stellen Sie sicher, dass Ihre Internetverbindung stabil ist und ausreichend Speicherplatz vorhanden ist.",
+            "name": "Sofia Schmidt"
+        },
+        {
+            "id": 9,
+            "incident_id": "INC1009",
+            "title": "Error loading profile information",
+            "description": "Users report that their profile information is not loading correctly, leaving account details incomplete. Check the network connection and try refreshing the page.",
+            "status": "investigating",
+            "severity": "high",
+            "faq": "FAQ: Profile Loading Error - Check your network connection and attempt a page refresh.",
+            "name": "Charlotte Wilson"
+        },
+        {
+            "id": 10,
+            "incident_id": "INC1010",
+            "title": "Dokumenten-Upload fehlgeschlagen",
+            "description": "Der Benutzer berichtet, dass beim Hochladen von Dokumenten ein Fehler auftritt. Überprüfen Sie die Dateigröße und das Format, um den Upload erfolgreich abzuschließen.",
+            "status": "resolved",
+            "severity": "low",
+            "faq": "FAQ: Dokumenten-Upload - Stellen Sie sicher, dass die Datei den Systemanforderungen bezüglich Größe und Format entspricht.",
+            "name": "Maximilian Becker"
+        }
     ]

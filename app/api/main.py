@@ -9,19 +9,10 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
-from data.load_data import get_bookings_data, get_flights_data
+from data.load_data import get_incidents_data
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("voicerag")
-
-class BookingOptions(BaseModel):
-    luggage: Optional[str] = None
-    meals: Optional[str] = None
-    delay: Optional[str] = None
-
-class BookingUpdateRequest(BaseModel):
-    phone: str
-    options: BookingOptions
 
 app = FastAPI()
 
@@ -33,44 +24,25 @@ async def startup_event():
 
 @app.get("/health")
 async def read_root():
-    return 'hello with Stu and Ms flights'
+    return 'hello with customer service Orange'
 
-@app.get("/api/bookings")
-async def get_bookings(flight: Optional[str] = None, name: Optional[str] = None):
-    bookings = get_bookings_data()
-    if flight:
-        bookings = [b for b in bookings if b["flight"] == flight]
+@app.get("/api/incidents")
+async def get_incidents(id: Optional[int] = None, name: Optional[str] = None):
+    incidents = get_incidents_data()
+    if id:
+        incidents = [b for b in incidents if b["id"] == id]
     if name:
-        bookings = [b for b in bookings if b["name"].lower() == name.lower()]
-    return {"bookings": bookings}
+        incidents = [b for b in incidents if b["name"].lower() == name.lower()]
+    return {"incidents": incidents}
 
-@app.get("/api/bookings/{booking_id}")
-async def get_booking(booking_id: int):
-    bookings = get_bookings_data()
-    booking = next((b for b in bookings if b["id"] == booking_id), None)
-    if not booking:
-        raise HTTPException(status_code=404, detail="Booking not found")
-    return {"booking": booking}
+@app.get("/api/incidents/{incident_id}")
+async def get_incident(incident_id: int):
+    incidents = get_incidents_data()
+    incident = next((b for b in incidents if b["id"] == incident_id), None)
+    if not incident:
+        raise HTTPException(status_code=404, detail="incident not found")
+    return {"incident": incident}
 
-@app.get("/api/flights")
-async def get_flights(flight: Optional[str] = None):
-    flights = get_flights_data()
-    if flight:
-        flights = [f for f in flights if f["id"] == flight]
-    return {"flights": flights}
-
-@app.get("/api/flights/{flight_id}")
-async def get_flight_by_id(flight_id: str):
-    """
-    Retrieve a specific flight by its ID.
-    
-    - **flight_id**: The unique identifier of the flight.
-    """
-    flights = get_flights_data()
-    flight = next((f for f in flights if f["id"] == flight_id), None)
-    if not flight:
-        raise HTTPException(status_code=404, detail="Flight not found")
-    return {"flight": flight}
 
 if __name__ == "__main__":
     import uvicorn

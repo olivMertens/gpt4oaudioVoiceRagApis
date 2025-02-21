@@ -1,13 +1,13 @@
 {
     "app": {
-        "title": "Parlez à votre assistant STU / MS pour vos vols",
+        "title": "Parlez à votre assistant Orange",
         "footer": "Créée avec Azure AI Search + Azure OpenAI + Container Apps",
         "stopRecording": "Arrêter l'enregistrement",
         "startRecording": "Commencer l'enregistrement",
         "stopConversation": "Arrêter la conversation"
     },
     "status": {
-        "notRecordingMessage": "Posez n’importe quelle question sur les vols Stu & Ms ou sur votre réservation",
+        "notRecordingMessage": "Posez vos questions à votre assistant Orange.",
         "conversationInProgress": "Conversation en cours"
     },
     "history": {
