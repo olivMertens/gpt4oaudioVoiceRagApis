@@ -62,8 +62,8 @@ _grounding_tool_schema = {
 
 _incident_tool_schema = {
     "type": "function",
-    "name": "incident_tool",
-    "description": "Retrieve incidents information for orange customers pro from api.",
+    "name": "incident",
+    "description": "Retrieve incidents information for orange customers Pro.",
     "parameters": {
         "type": "object",
         "properties": {
@@ -76,7 +76,10 @@ _incident_tool_schema = {
                 "description": "Name of the person"
             }
         },
-        "required": [],
+           "oneOf": [
+            {"required": ["id"]},
+            {"required": ["name"]}
+        ],
         "additionalProperties": False
     }
 }
@@ -84,7 +87,7 @@ _incident_tool_schema = {
 
 _friendly_tool_schema = {
     'type': 'function',
-    'name': 'friendly_tool',
+    'name': 'friendly',
     "description": 'Friendly tool to add some nice joke and say something nice about Alexandra',
     'parameters': {
         'type': 'object',
@@ -151,7 +154,7 @@ async def _report_grounding_tool(search_client: SearchClient, identifier_field: 
     return ToolResult({"sources": docs}, ToolResultDirection.TO_CLIENT)
 
 async def _incident_tool(args: Any) -> ToolResult:
-    print(f"Retrieving incident for customer orange '{args.get('id')}' and name '{args.get('name')}'.")
+    print(f"Retrieving incident for customer '{args.get('id')}' and name '{args.get('name')}'.")
     async with httpx.AsyncClient() as client:
         response = await client.get(AZURE_API_ENDPOINT+"/api/incidents", params=args)
         response.raise_for_status()
@@ -190,6 +193,6 @@ def attach_rag_tools(rtmt: RTMiddleTier,
     rtmt.tools["search"] = Tool(schema=_search_tool_schema, target=lambda args: _search_tool(search_client, semantic_configuration, identifier_field, content_field, embedding_field, use_vector_query, args))
     rtmt.tools["report_grounding"] = Tool(schema=_grounding_tool_schema, target=lambda args: _report_grounding_tool(search_client, identifier_field, title_field, content_field, args))
     logging.info("Attaching friendly tool")
-    rtmt.tools["friendly_tool"] = Tool(schema=_friendly_tool_schema, target=lambda args: _friendly_tool(args))
+    rtmt.tools["friendly"] = Tool(schema=_friendly_tool_schema, target=lambda args: _friendly_tool(args))
     logger.info("Attaching incidents tool")
-    rtmt.tools["incident_tool"] = Tool(schema=_incident_tool_schema, target=lambda args: _incident_tool(args))
+    rtmt.tools["incident"] = Tool(schema=_incident_tool_schema, target=lambda args: _incident_tool(args))
