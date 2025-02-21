@@ -63,7 +63,7 @@ _grounding_tool_schema = {
 _incident_tool_schema = {
     "type": "function",
     "name": "incident",
-    "description": "Retrieve incidents information for orange customers Pro.",
+    "description": "Retrieve incident information for orange pro customer by the id of the incident or the name of the person",
     "parameters": {
         "type": "object",
         "properties": {
@@ -76,10 +76,7 @@ _incident_tool_schema = {
                 "description": "Name of the person"
             }
         },
-           "oneOf": [
-            {"required": ["id"]},
-            {"required": ["name"]}
-        ],
+        "required": [],
         "additionalProperties": False
     }
 }
