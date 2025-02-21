@@ -80,11 +80,11 @@ param openAiRealtimeDeployment string = ''
   'echo'
   'alloy'
   'shimmer'
+  'fable'
+  'nova'
   'ash'
-  'ballad'
   'coral'
   'sage'
-  'verse'
 ])
 @metadata({
   azd: {
